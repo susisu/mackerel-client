@@ -8,7 +8,7 @@ export type Service = {
 
 export type CreateServiceInput = {
   name: string;
-  memo: string;
+  memo?: string;
 };
 
 export type Role = {
@@ -18,7 +18,7 @@ export type Role = {
 
 export type CreateRoleInput = {
   name: string;
-  memo: string;
+  memo?: string;
 };
 
 export class ServicesClient {
@@ -45,11 +45,17 @@ export class ServicesClient {
       signal?: AbortSignal;
     },
   ): Promise<Service> {
+    type RawInput = {
+      name: string;
+      memo: string;
+    };
     const res = await this.api.fetch<Service>("POST", "/api/v0/services", {
-      body: JSON.stringify({
-        name: input.name,
-        memo: input.memo,
-      }),
+      body: JSON.stringify(
+        {
+          name: input.name,
+          memo: input.memo ?? "",
+        } satisfies RawInput,
+      ),
       signal: options?.signal,
     });
     return res;
@@ -90,14 +96,20 @@ export class ServicesClient {
       signal?: AbortSignal;
     },
   ): Promise<Role> {
+    type RawInput = {
+      name: string;
+      memo: string;
+    };
     const res = await this.api.fetch<Role>(
       "POST",
       `/api/v0/services/${serviceName}/roles`,
       {
-        body: JSON.stringify({
-          name: input.name,
-          memo: input.memo,
-        }),
+        body: JSON.stringify(
+          {
+            name: input.name,
+            memo: input.memo ?? "",
+          } satisfies RawInput,
+        ),
         signal: options?.signal,
       },
     );
