@@ -28,9 +28,7 @@ export class ServicesClient {
     this.api = api;
   }
 
-  async list(options?: {
-    signal?: AbortSignal;
-  }): Promise<Service[]> {
+  async list(options?: { signal?: AbortSignal }): Promise<Service[]> {
     const res = await this.api.fetch<{ services: Service[] }>(
       "GET",
       "/api/v0/services",
@@ -41,9 +39,7 @@ export class ServicesClient {
 
   async create(
     input: CreateServiceInput,
-    options?: {
-      signal?: AbortSignal;
-    },
+    options?: { signal?: AbortSignal },
   ): Promise<Service> {
     type RawInput = {
       name: string;
@@ -63,9 +59,7 @@ export class ServicesClient {
 
   async delete(
     serviceName: string,
-    options?: {
-      signal?: AbortSignal;
-    },
+    options?: { signal?: AbortSignal },
   ): Promise<Service> {
     const res = await this.api.fetch<Service>(
       "DELETE",
@@ -77,9 +71,7 @@ export class ServicesClient {
 
   async listRoles(
     serviceName: string,
-    options?: {
-      signal?: AbortSignal;
-    },
+    options?: { signal?: AbortSignal },
   ): Promise<Role[]> {
     const res = await this.api.fetch<{ roles: Role[] }>(
       "GET",
@@ -92,9 +84,7 @@ export class ServicesClient {
   async createRole(
     serviceName: string,
     input: CreateRoleInput,
-    options?: {
-      signal?: AbortSignal;
-    },
+    options?: { signal?: AbortSignal },
   ): Promise<Role> {
     type RawInput = {
       name: string;
@@ -119,9 +109,7 @@ export class ServicesClient {
   async deleteRole(
     serviceName: string,
     roleName: string,
-    options?: {
-      signal?: AbortSignal;
-    },
+    options?: { signal?: AbortSignal },
   ): Promise<Role> {
     const res = await this.api.fetch<Role>(
       "DELETE",
@@ -133,9 +121,7 @@ export class ServicesClient {
 
   async listMetricNames(
     serviceName: string,
-    options?: {
-      signal?: AbortSignal;
-    },
+    options?: { signal?: AbortSignal },
   ): Promise<string[]> {
     const res = await this.api.fetch<{ names: string[] }>(
       "GET",
