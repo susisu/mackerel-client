@@ -11,11 +11,11 @@ export type FetchOptions = {
 };
 
 export class ApiClient {
-  private apiKey: string;
+  private key: string;
   private base: URL;
 
-  constructor(apiKey: string, options?: ApiClientOptions) {
-    this.apiKey = apiKey;
+  constructor(key: string, options?: ApiClientOptions) {
+    this.key = key;
     this.base = new URL(options?.base ?? "https://api.mackerelio.com/");
   }
 
@@ -34,7 +34,7 @@ export class ApiClient {
     }
 
     const headers = new Headers({
-      "X-Api-Key": this.apiKey,
+      "X-Api-Key": this.key,
     });
     if (body !== undefined) {
       headers.set("Content-Type", "application/json");
