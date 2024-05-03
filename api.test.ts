@@ -72,7 +72,7 @@ describe("ApiClient", () => {
 
       const client = new ApiClient("deadbeef");
       const res = await client.fetch("POST", "/api/v0/dummy", {
-        body: JSON.stringify({ foo: "bar" }),
+        body: { foo: "bar" },
       });
 
       assertSpyCalls(handler, 1);

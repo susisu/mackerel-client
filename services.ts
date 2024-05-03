@@ -45,15 +45,17 @@ export class ServicesClient {
       name: string;
       memo: string;
     };
-    const res = await this.api.fetch<Service>("POST", "/api/v0/services", {
-      body: JSON.stringify(
-        {
+    const res = await this.api.fetch<Service, RawInput>(
+      "POST",
+      "/api/v0/services",
+      {
+        body: {
           name: input.name,
           memo: input.memo ?? "",
-        } satisfies RawInput,
-      ),
-      signal: options?.signal,
-    });
+        },
+        signal: options?.signal,
+      },
+    );
     return res;
   }
 
@@ -90,16 +92,14 @@ export class ServicesClient {
       name: string;
       memo: string;
     };
-    const res = await this.api.fetch<Role>(
+    const res = await this.api.fetch<Role, RawInput>(
       "POST",
       `/api/v0/services/${serviceName}/roles`,
       {
-        body: JSON.stringify(
-          {
-            name: input.name,
-            memo: input.memo ?? "",
-          } satisfies RawInput,
-        ),
+        body: {
+          name: input.name,
+          memo: input.memo ?? "",
+        },
         signal: options?.signal,
       },
     );

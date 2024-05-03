@@ -4,9 +4,9 @@ export type ApiClientOptions = {
 
 export type FetchMethod = "GET" | "POST" | "PUT" | "DELETE";
 
-export type FetchOptions = {
+export type FetchOptions<Input> = {
   params?: URLSearchParams;
-  body?: string;
+  body?: Input;
   signal?: AbortSignal;
 };
 
@@ -19,13 +19,15 @@ export class ApiClient {
     this.base = new URL(options?.base ?? "https://api.mackerelio.com/");
   }
 
-  async fetch<T = unknown>(
+  async fetch<Output = unknown, Input = unknown>(
     method: FetchMethod,
     path: string,
-    options?: FetchOptions,
-  ): Promise<T> {
+    options?: FetchOptions<Input>,
+  ): Promise<Output> {
     const params = options?.params;
-    const body = options?.body;
+    const body = options?.body !== undefined
+      ? JSON.stringify(options.body)
+      : undefined;
     const signal = options?.signal;
 
     const url = new URL(path, this.base);
@@ -56,6 +58,6 @@ export class ApiClient {
     }
 
     const json = await res.json();
-    return json as T;
+    return json as Output;
   }
 }
