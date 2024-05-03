@@ -8,7 +8,7 @@ export type Service = {
 
 export type CreateServiceInput = {
   name: string;
-  memo?: string;
+  memo?: string | undefined;
 };
 
 export type Role = {
@@ -18,7 +18,7 @@ export type Role = {
 
 export type CreateRoleInput = {
   name: string;
-  memo?: string;
+  memo?: string | undefined;
 };
 
 export class ServicesClient {
