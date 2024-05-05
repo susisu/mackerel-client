@@ -1,6 +1,16 @@
 {
   "name": "@susisu/mackerel-client",
   "version": "0.0.0",
+  "publish": {
+    "include": [
+      "LICENSE",
+      "README.md",
+      "**/*.ts"
+    ],
+    "exclude": [
+      "**/*.test.ts"
+    ]
+  },
   "exports": {
     ".": "./mod.ts"
   },
