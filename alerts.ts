@@ -233,9 +233,7 @@ function fromRawBaseAlert(raw: RawBaseAlert): BaseAlert {
     status: raw.status,
     openedAt: new Date(raw.openedAt * 1000),
     isClosed: typeof raw.closedAt === "number",
-    closedAt: typeof raw.closedAt === "number"
-      ? new Date(raw.closedAt * 1000)
-      : undefined,
+    closedAt: typeof raw.closedAt === "number" ? new Date(raw.closedAt * 1000) : undefined,
     closeReason: raw.reason ?? undefined,
     memo: raw.memo,
     monitorId: raw.monitorId,

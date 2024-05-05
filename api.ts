@@ -13,9 +13,7 @@ export type FetchOptions<Input> = Options<{
 }>;
 
 // deno-lint-ignore ban-types
-export type ApiOptions<T = {}> = Options<
-  { [K in keyof T]: T[K] } & { signal: AbortSignal }
->;
+export type ApiOptions<T = {}> = Options<{ [K in keyof T]: T[K] } & { signal: AbortSignal }>;
 
 export class ApiClient {
   private key: string;
@@ -32,9 +30,7 @@ export class ApiClient {
     options?: FetchOptions<Input>,
   ): Promise<Output> {
     const params = options?.params;
-    const body = options?.body !== undefined
-      ? JSON.stringify(options.body)
-      : undefined;
+    const body = options?.body !== undefined ? JSON.stringify(options.body) : undefined;
     const signal = options?.signal;
 
     const url = new URL(path, this.base);

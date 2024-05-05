@@ -19,9 +19,7 @@ describe("ApiClient", () => {
 
   describe("fetch", () => {
     it("can fetch without parameters and body", async () => {
-      const handler = spy((_req: Request) =>
-        new Response(JSON.stringify({ id: 42 }))
-      );
+      const handler = spy((_req: Request) => new Response(JSON.stringify({ id: 42 })));
       mf.mock("GET@/api/v0/dummy", handler);
 
       const client = new ApiClient("deadbeef");
@@ -38,9 +36,7 @@ describe("ApiClient", () => {
     });
 
     it("can fetch with parameters", async () => {
-      const handler = spy((_req: Request) =>
-        new Response(JSON.stringify({ id: 42 }))
-      );
+      const handler = spy((_req: Request) => new Response(JSON.stringify({ id: 42 })));
       mf.mock("GET@/api/v0/dummy", handler);
 
       const client = new ApiClient("deadbeef");
@@ -59,9 +55,7 @@ describe("ApiClient", () => {
     });
 
     it("can fetch with body", async () => {
-      const handler = spy((_req: Request) =>
-        new Response(JSON.stringify({ id: 42 }))
-      );
+      const handler = spy((_req: Request) => new Response(JSON.stringify({ id: 42 })));
       mf.mock("POST@/api/v0/dummy", handler);
 
       const client = new ApiClient("deadbeef");
@@ -81,9 +75,7 @@ describe("ApiClient", () => {
     });
 
     it("allows to override the base URL", async () => {
-      const handler = spy((_req: Request) =>
-        new Response(JSON.stringify({ id: 42 }))
-      );
+      const handler = spy((_req: Request) => new Response(JSON.stringify({ id: 42 })));
       mf.mock("GET@/api/v0/dummy", handler);
 
       const client = new ApiClient("deadbeef", {

@@ -309,9 +309,7 @@ function toRawCreateDowntimeInput(
       ): RawCreateDowntimeInputRecurrence => {
         const base = {
           interval: recurrence.interval,
-          until: recurrence.until
-            ? Math.floor(recurrence.until.getTime() / 1000)
-            : undefined,
+          until: recurrence.until ? Math.floor(recurrence.until.getTime() / 1000) : undefined,
         };
         switch (recurrence.type) {
           case "weekly":

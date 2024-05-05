@@ -221,10 +221,7 @@ export class HostsApiClient {
     roleFullnames: readonly string[],
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<
-      unknown,
-      Readonly<{ roleFullnames: readonly string[] }>
-    >(
+    await this.api.fetch<unknown, Readonly<{ roleFullnames: readonly string[] }>>(
       "PUT",
       `/api/v0/hosts/${hostId}/role-fullnames`,
       {
@@ -288,9 +285,7 @@ export class HostsApiClient {
       message: string;
       memo?: string | null | undefined;
     };
-    const res = await this.api.fetch<
-      { monitoredStatuses: RawHostMonitoredStatus[] }
-    >(
+    const res = await this.api.fetch<{ monitoredStatuses: RawHostMonitoredStatus[] }>(
       "GET",
       `/api/v0/hosts/${hostId}/monitored-statuses`,
       { signal: options?.signal },
@@ -405,9 +400,7 @@ function fromRawHost(raw: RawHost): Host {
     size: raw.size,
     status: raw.status,
     isRetired: raw.isRetired,
-    retiredAt: typeof raw.retiredAt === "number"
-      ? new Date(raw.retiredAt * 1000)
-      : undefined,
+    retiredAt: typeof raw.retiredAt === "number" ? new Date(raw.retiredAt * 1000) : undefined,
     interfaces: raw.interfaces.map((iface) => ({
       name: iface.name,
       macAddress: iface.macAddress ?? undefined,

@@ -37,9 +37,7 @@ export class GraphAnnotationsApiClient {
       from: Math.floor(from.getTime() / 1000).toString(),
       to: Math.floor(to.getTime() / 1000).toString(),
     });
-    const res = await this.api.fetch<
-      { graphAnnotations: RawGraphAnnotation[] }
-    >(
+    const res = await this.api.fetch<{ graphAnnotations: RawGraphAnnotation[] }>(
       "GET",
       "/api/v0/graph-annotations",
       {
@@ -47,19 +45,14 @@ export class GraphAnnotationsApiClient {
         signal: options?.signal,
       },
     );
-    return res.graphAnnotations.map((annotation) =>
-      fromRawGraphAnnotation(annotation)
-    );
+    return res.graphAnnotations.map((annotation) => fromRawGraphAnnotation(annotation));
   }
 
   async create(
     input: CreateGraphAnnotationInput,
     options?: ApiOptions,
   ): Promise<GraphAnnotation> {
-    const res = await this.api.fetch<
-      RawGraphAnnotation,
-      RawCreateGraphAnnnotationInput
-    >(
+    const res = await this.api.fetch<RawGraphAnnotation, RawCreateGraphAnnnotationInput>(
       "POST",
       "/api/v0/graph-annotations",
       {
@@ -75,10 +68,7 @@ export class GraphAnnotationsApiClient {
     input: CreateGraphAnnotationInput,
     options?: ApiOptions,
   ): Promise<GraphAnnotation> {
-    const res = await this.api.fetch<
-      RawGraphAnnotation,
-      RawCreateGraphAnnnotationInput
-    >(
+    const res = await this.api.fetch<RawGraphAnnotation, RawCreateGraphAnnnotationInput>(
       "PUT",
       `/api/v0/graph-annotations/${annotationId}`,
       {
