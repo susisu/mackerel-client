@@ -3,6 +3,7 @@ import type { Options } from "./types.ts";
 import { ApiClient } from "./api.ts";
 
 import { AlertsApiClient } from "./alerts.ts";
+import { DowntimesApiClient } from "./downtimes.ts";
 import { GraphAnnotationsApiClient } from "./graphAnnotations.ts";
 import { GraphDefsApiClient } from "./graphDefs.ts";
 import { HostsApiClient } from "./hosts.ts";
@@ -17,6 +18,7 @@ export type MackerelClientOptions = Options<{
 
 export class MackerelClient {
   readonly alerts: AlertsApiClient;
+  readonly downtimes: DowntimesApiClient;
   readonly graphAnnotations: GraphAnnotationsApiClient;
   readonly graphDefs: GraphDefsApiClient;
   readonly hosts: HostsApiClient;
@@ -30,6 +32,7 @@ export class MackerelClient {
       base: options?.apiBase,
     });
     this.alerts = new AlertsApiClient(apiClient);
+    this.downtimes = new DowntimesApiClient(apiClient);
     this.graphAnnotations = new GraphAnnotationsApiClient(apiClient);
     this.graphDefs = new GraphDefsApiClient(apiClient);
     this.hosts = new HostsApiClient(apiClient);
