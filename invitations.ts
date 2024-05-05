@@ -2,15 +2,15 @@ import type { ApiClient, ApiOptions } from "./api.ts";
 
 export type Invitation = {
   email: string;
-  role: InvitationRole;
+  authority: InvitationAuthority;
   expiresAt: Date;
 };
 
-export type InvitationRole = "manager" | "collaborator" | "viewer";
+export type InvitationAuthority = "manager" | "collaborator" | "viewer";
 
 export type CreateInvitationInput = Readonly<{
   email: string;
-  role: InvitationRole;
+  authority: InvitationAuthority;
 }>;
 
 export class InvitationsApiClient {
@@ -23,7 +23,7 @@ export class InvitationsApiClient {
   async list(options?: ApiOptions): Promise<Invitation[]> {
     const res = await this.api.fetch<{ invitations: RawInvitation[] }>(
       "GET",
-      `/api/v0/invitations`,
+      "/api/v0/invitations",
       { signal: options?.signal },
     );
     return res.invitations.map((i) => fromRawInvitation(i));
@@ -33,17 +33,13 @@ export class InvitationsApiClient {
     input: CreateInvitationInput,
     options?: ApiOptions,
   ): Promise<Invitation> {
-    type RawInput = Readonly<{
-      email: string;
-      authority: InvitationRole;
-    }>;
-    const res = await this.api.fetch<RawInvitation, RawInput>(
+    const res = await this.api.fetch<RawInvitation, CreateInvitationInput>(
       "POST",
-      `/api/v0/invitations`,
+      "/api/v0/invitations",
       {
         body: {
           email: input.email,
-          authority: input.role,
+          authority: input.authority,
         },
         signal: options?.signal,
       },
@@ -57,7 +53,7 @@ export class InvitationsApiClient {
       Readonly<{ email: string }>
     >(
       "POST",
-      `/api/v0/invitations/revoke`,
+      "/api/v0/invitations/revoke",
       {
         body: { email },
         signal: options?.signal,
@@ -68,14 +64,14 @@ export class InvitationsApiClient {
 
 type RawInvitation = {
   email: string;
-  authority: InvitationRole;
+  authority: InvitationAuthority;
   expiresAt: number;
 };
 
 function fromRawInvitation(raw: RawInvitation): Invitation {
   return {
     email: raw.email,
-    role: raw.authority,
+    authority: raw.authority,
     expiresAt: new Date(raw.expiresAt * 1000),
   };
 }

@@ -9,6 +9,7 @@ import { InvitationsApiClient } from "./invitations.ts";
 import { MetricsApiClient } from "./metrics.ts";
 import { OrgApiClient } from "./org.ts";
 import { ServicesApiClient } from "./services.ts";
+import { UsersApiClient } from "./users.ts";
 
 export type MackerelClientOptions = Options<{
   apiBase: string | URL;
@@ -22,6 +23,7 @@ export class MackerelClient {
   readonly metrics: MetricsApiClient;
   readonly org: OrgApiClient;
   readonly services: ServicesApiClient;
+  readonly users: UsersApiClient;
 
   constructor(apiKey: string, options?: MackerelClientOptions) {
     const apiClient = new ApiClient(apiKey, {
@@ -34,5 +36,6 @@ export class MackerelClient {
     this.metrics = new MetricsApiClient(apiClient);
     this.org = new OrgApiClient(apiClient);
     this.services = new ServicesApiClient(apiClient);
+    this.users = new UsersApiClient(apiClient);
   }
 }
