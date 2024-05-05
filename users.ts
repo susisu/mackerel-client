@@ -47,7 +47,7 @@ export class UsersApiClient {
       "/api/v0/users",
       { signal: options?.signal },
     );
-    return res.users.map((u) => fromRawUser(u));
+    return res.users.map((user) => fromRawUser(user));
   }
 
   async remove(userId: string, options?: ApiOptions): Promise<User> {
@@ -68,7 +68,7 @@ export class UsersApiClient {
       "/api/v0/invitations",
       { signal: options?.signal },
     );
-    return res.invitations.map((i) => fromRawInvitation(i));
+    return res.invitations.map((invitation) => fromRawInvitation(invitation));
   }
 
   async invite(

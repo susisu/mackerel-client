@@ -47,7 +47,9 @@ export class GraphAnnotationsApiClient {
         signal: options?.signal,
       },
     );
-    return res.graphAnnotations.map((a) => fromRawGraphAnnotation(a));
+    return res.graphAnnotations.map((annotation) =>
+      fromRawGraphAnnotation(annotation)
+    );
   }
 
   async create(

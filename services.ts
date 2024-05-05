@@ -151,7 +151,7 @@ export class ServicesApiClient {
       `/api/v0/services/${serviceName}/metadata`,
       { signal: options?.signal },
     );
-    return res.metadata.map((m) => m.namespace);
+    return res.metadata.map((item) => item.namespace);
   }
 
   async getMetadata<T = unknown>(
@@ -211,7 +211,7 @@ export class ServicesApiClient {
       `/api/v0/services/${serviceName}/roles/${roleName}/metadata`,
       { signal: options?.signal },
     );
-    return res.metadata.map((m) => m.namespace);
+    return res.metadata.map((item) => item.namespace);
   }
 
   async getRoleMetadata<T = unknown>(

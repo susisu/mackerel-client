@@ -55,13 +55,13 @@ export type CreateHostInputCheckMonitor = Readonly<{
   memo?: string | undefined;
 }>;
 
-export type MonitoredStatus = {
+export type HostMonitoredStatus = {
   monitorId: string;
   status: AlertStatus;
-  detail: MonitoredStatusDetail | undefined;
+  detail: HostMonitoredStatusDetail | undefined;
 };
 
-export type MonitoredStatusDetail = {
+export type HostMonitoredStatusDetail = {
   type: "check";
   message: string;
   memo: string;
@@ -277,32 +277,32 @@ export class HostsApiClient {
   async listMonitoredStatuses(
     hostId: string,
     options?: ApiOptions,
-  ): Promise<MonitoredStatus[]> {
-    type RawMonitoredStatus = {
+  ): Promise<HostMonitoredStatus[]> {
+    type RawHostMonitoredStatus = {
       monitorId: string;
       status: AlertStatus;
-      detail?: RawMonitoredStatusDetail | null | undefined;
+      detail?: RawHostMonitoredStatusDetail | null | undefined;
     };
-    type RawMonitoredStatusDetail = {
+    type RawHostMonitoredStatusDetail = {
       type: "check";
       message: string;
       memo?: string | null | undefined;
     };
     const res = await this.api.fetch<
-      { monitoredStatuses: RawMonitoredStatus[] }
+      { monitoredStatuses: RawHostMonitoredStatus[] }
     >(
       "GET",
       `/api/v0/hosts/${hostId}/monitored-statuses`,
       { signal: options?.signal },
     );
-    return res.monitoredStatuses.map((ms) => ({
-      monitorId: ms.monitorId,
-      status: ms.status,
-      detail: ms.detail
+    return res.monitoredStatuses.map((status) => ({
+      monitorId: status.monitorId,
+      status: status.status,
+      detail: status.detail
         ? {
-          type: ms.detail.type,
-          message: ms.detail.message,
-          memo: ms.detail.memo ?? "",
+          type: status.detail.type,
+          message: status.detail.message,
+          memo: status.detail.memo ?? "",
         }
         : undefined,
     }));
@@ -320,7 +320,7 @@ export class HostsApiClient {
       `/api/v0/hosts/${hostId}/metadata`,
       { signal: options?.signal },
     );
-    return res.metadata.map((m) => m.namespace);
+    return res.metadata.map((item) => item.namespace);
   }
 
   async getMetadata<T = unknown>(

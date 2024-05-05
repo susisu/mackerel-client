@@ -117,7 +117,7 @@ export class DowntimesApiClient {
       "/api/v0/downtimes",
       { signal: options?.signal },
     );
-    return res.downtimes.map((d) => fromRawDowntime(d));
+    return res.downtimes.map((downtime) => fromRawDowntime(downtime));
   }
 
   async create(
