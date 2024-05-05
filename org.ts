@@ -19,7 +19,7 @@ export class OrgApiClient {
     };
     const res = await this.api.fetch<RawOrg>(
       "GET",
-      `/api/v0/org`,
+      "/api/v0/org",
       { signal: options?.signal },
     );
     return {
