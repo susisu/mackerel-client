@@ -6,6 +6,7 @@ import { AlertsApiClient } from "./alerts.ts";
 import { GraphDefsApiClient } from "./graphDefs.ts";
 import { HostsApiClient } from "./hosts.ts";
 import { MetricsApiClient } from "./metrics.ts";
+import { OrgApiClient } from "./org.ts";
 import { ServicesApiClient } from "./services.ts";
 
 export type MackerelClientOptions = Options<{
@@ -17,6 +18,7 @@ export class MackerelClient {
   readonly graphDefs: GraphDefsApiClient;
   readonly hosts: HostsApiClient;
   readonly metrics: MetricsApiClient;
+  readonly org: OrgApiClient;
   readonly services: ServicesApiClient;
 
   constructor(apiKey: string, options?: MackerelClientOptions) {
@@ -27,6 +29,7 @@ export class MackerelClient {
     this.graphDefs = new GraphDefsApiClient(apiClient);
     this.hosts = new HostsApiClient(apiClient);
     this.metrics = new MetricsApiClient(apiClient);
+    this.org = new OrgApiClient(apiClient);
     this.services = new ServicesApiClient(apiClient);
   }
 }
