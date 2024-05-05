@@ -5,10 +5,10 @@ export type Alert =
   | HostAlert
   | ServiceAlert
   | ExternalAlert
-  | CheckAlert
   | ExpressionAlert
   | AnomalyDetectionAlert
-  | QueryAlert;
+  | QueryAlert
+  | CheckAlert;
 
 type BaseAlert = {
   id: string;
@@ -43,12 +43,6 @@ export type ExternalAlert = BaseAlert & {
   message: string;
 };
 
-export type CheckAlert = BaseAlert & {
-  type: "check";
-  hostId: string;
-  message: string;
-};
-
 export type ExpressionAlert = BaseAlert & {
   type: "expression";
   value: number | undefined;
@@ -63,6 +57,12 @@ export type QueryAlert = BaseAlert & {
   type: "query";
   value: number;
   series: QueryAlertSeries;
+};
+
+export type CheckAlert = BaseAlert & {
+  type: "check";
+  hostId: string;
+  message: string;
 };
 
 export type AlertType = Alert["type"];
@@ -168,10 +168,10 @@ type RawAlert =
   | RawHostAlert
   | RawServiceAlert
   | RawExternalAlert
-  | RawCheckAlert
   | RawExpressionAlert
   | RawAnomalyDetectionAlert
-  | RawQueryAlert;
+  | RawQueryAlert
+  | RawCheckAlert;
 
 type RawBaseAlert = {
   id: string;
@@ -205,12 +205,6 @@ type RawExternalAlert = RawBaseAlert & {
   message: string;
 };
 
-type RawCheckAlert = RawBaseAlert & {
-  type: "check";
-  hostId: string;
-  message: string;
-};
-
 type RawExpressionAlert = RawBaseAlert & {
   type: "expression";
   value?: number | null | undefined;
@@ -225,6 +219,12 @@ type RawQueryAlert = RawBaseAlert & {
   type: "query";
   value: number;
   series: QueryAlertSeries;
+};
+
+type RawCheckAlert = RawBaseAlert & {
+  type: "check";
+  hostId: string;
+  message: string;
 };
 
 function fromRawBaseAlert(raw: RawBaseAlert): BaseAlert {
@@ -271,13 +271,6 @@ function fromRawAlert(raw: RawAlert): Alert {
         value: raw.value ?? undefined,
         message: raw.message,
       };
-    case "check":
-      return {
-        ...base,
-        type: "check",
-        hostId: raw.hostId,
-        message: raw.message,
-      };
     case "expression":
       return {
         ...base,
@@ -297,9 +290,16 @@ function fromRawAlert(raw: RawAlert): Alert {
         value: raw.value,
         series: raw.series,
       };
+    case "check":
+      return {
+        ...base,
+        type: "check",
+        hostId: raw.hostId,
+        message: raw.message,
+      };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (raw as any).type;
+      const type = (raw satisfies never as any).type;
       throw new Error(`Unknown alert type: ${type}`);
     }
   }
