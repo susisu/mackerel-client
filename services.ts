@@ -1,4 +1,4 @@
-import { ApiClient } from "./api.ts";
+import { ApiClient, ApiOptions } from "./api.ts";
 
 export type Service = {
   name: string;
@@ -29,7 +29,7 @@ export class ServicesApiClient {
   }
 
   async list(
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<Service[]> {
     const res = await this.api.fetch<{ services: Service[] }>(
       "GET",
@@ -41,7 +41,7 @@ export class ServicesApiClient {
 
   async create(
     input: CreateServiceInput,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<Service> {
     type RawInput = {
       name: string;
@@ -63,7 +63,7 @@ export class ServicesApiClient {
 
   async delete(
     serviceName: string,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<Service> {
     const res = await this.api.fetch<Service>(
       "DELETE",
@@ -75,7 +75,7 @@ export class ServicesApiClient {
 
   async listRoles(
     serviceName: string,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<Role[]> {
     const res = await this.api.fetch<{ roles: Role[] }>(
       "GET",
@@ -88,7 +88,7 @@ export class ServicesApiClient {
   async createRole(
     serviceName: string,
     input: CreateRoleInput,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<Role> {
     type RawInput = {
       name: string;
@@ -111,7 +111,7 @@ export class ServicesApiClient {
   async deleteRole(
     serviceName: string,
     roleName: string,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<Role> {
     const res = await this.api.fetch<Role>(
       "DELETE",
@@ -123,7 +123,7 @@ export class ServicesApiClient {
 
   async listMetricNames(
     serviceName: string,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<string[]> {
     const res = await this.api.fetch<{ names: string[] }>(
       "GET",

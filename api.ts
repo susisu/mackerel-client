@@ -10,6 +10,11 @@ export type FetchOptions<Input> = {
   signal?: AbortSignal;
 };
 
+// deno-lint-ignore ban-types
+export type ApiOptions<T = {}> = Readonly<
+  { [K in keyof T]: T[K] | undefined } & { signal?: AbortSignal | undefined }
+>;
+
 export class ApiClient {
   private key: string;
   private base: URL;

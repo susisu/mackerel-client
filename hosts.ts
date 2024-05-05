@@ -1,4 +1,4 @@
-import { ApiClient } from "./api.ts";
+import { ApiClient, ApiOptions } from "./api.ts";
 import { AlertStatus } from "./alerts.ts";
 
 export type Host = {
@@ -74,14 +74,15 @@ export class HostsApiClient {
     this.api = api;
   }
 
-  async list(options?: {
-    serviceName?: string | undefined;
-    roleNames?: string[] | undefined;
-    name?: string | undefined;
-    customIdentifier?: string | undefined;
-    statuses?: HostStatus[] | undefined;
-    signal?: AbortSignal | undefined;
-  }): Promise<Host[]> {
+  async list(
+    options?: ApiOptions<{
+      serviceName: string;
+      roleNames: readonly string[];
+      name: string;
+      customIdentifier: string;
+      statuses: readonly HostStatus[];
+    }>,
+  ): Promise<Host[]> {
     const params = new URLSearchParams();
     if (options?.serviceName !== undefined) {
       params.set("service", options.serviceName);
@@ -115,7 +116,7 @@ export class HostsApiClient {
 
   async get(
     hostId: string,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<Host> {
     const res = await this.api.fetch<{ host: RawHost }>(
       "GET",
@@ -125,10 +126,12 @@ export class HostsApiClient {
     return fromRawHost(res.host);
   }
 
-  async getByCustomIdentifier(customIdentifier: string, options?: {
-    caseInsensitive?: boolean | undefined;
-    signal?: AbortSignal | undefined;
-  }): Promise<Host> {
+  async getByCustomIdentifier(
+    customIdentifier: string,
+    options?: ApiOptions<{
+      caseInsensitive: boolean;
+    }>,
+  ): Promise<Host> {
     const caseInsensitive = options?.caseInsensitive ?? false;
     const params = new URLSearchParams();
     if (caseInsensitive) {
@@ -147,7 +150,7 @@ export class HostsApiClient {
 
   async create(
     input: CreateHostInput,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<{ id: string }> {
     const res = await this.api.fetch<{ id: string }, RawCreateHostInput>(
       "POST",
@@ -163,7 +166,7 @@ export class HostsApiClient {
   async update(
     hostId: string,
     input: CreateHostInput,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<{ id: string }> {
     const res = await this.api.fetch<{ id: string }, RawCreateHostInput>(
       "PUT",
@@ -179,7 +182,7 @@ export class HostsApiClient {
   async updateStatus(
     hostId: string,
     status: HostStatus,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
       { success: true },
@@ -197,7 +200,7 @@ export class HostsApiClient {
   async bulkUpdateStatuses(
     hostIds: string[],
     status: HostStatus,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
       { success: true },
@@ -221,7 +224,7 @@ export class HostsApiClient {
   async updateRoles(
     hostId: string,
     roleFullnames: string[],
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
       { success: true },
@@ -238,7 +241,7 @@ export class HostsApiClient {
 
   async retire(
     hostId: string,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
       { success: true },
@@ -256,7 +259,7 @@ export class HostsApiClient {
 
   async bulkRetire(
     hostIds: string[],
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
       { success: true },
@@ -273,7 +276,7 @@ export class HostsApiClient {
 
   async listMetricNames(
     hostId: string,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<string[]> {
     const res = await this.api.fetch<{ names: string[] }>(
       "GET",
@@ -285,7 +288,7 @@ export class HostsApiClient {
 
   async listMonitoredStatuses(
     hostId: string,
-    options?: { signal?: AbortSignal | undefined },
+    options?: ApiOptions,
   ): Promise<MonitoredStatus[]> {
     type RawMonitoredStatus = {
       monitorId: string;
