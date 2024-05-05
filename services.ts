@@ -138,4 +138,126 @@ export class ServicesApiClient {
     );
     return res.names;
   }
+
+  async listMetadataNamespaces(
+    serviceName: string,
+    options?: ApiOptions,
+  ): Promise<string[]> {
+    type RawMetadata = {
+      namespace: string;
+    };
+    const res = await this.api.fetch<{ metadata: RawMetadata[] }>(
+      "GET",
+      `/api/v0/services/${serviceName}/metadata`,
+      { signal: options?.signal },
+    );
+    return res.metadata.map((m) => m.namespace);
+  }
+
+  async getMetadata<T = unknown>(
+    serviceName: string,
+    namespace: string,
+    options?: ApiOptions,
+  ): Promise<T> {
+    const res = await this.api.fetch<T>(
+      "GET",
+      `/api/v0/services/${serviceName}/metadata/${namespace}`,
+      { signal: options?.signal },
+    );
+    return res;
+  }
+
+  async putMetadata<T = unknown>(
+    serviceName: string,
+    namespace: string,
+    metadata: T,
+    options?: ApiOptions,
+  ): Promise<void> {
+    await this.api.fetch<unknown, T>(
+      "PUT",
+      `/api/v0/services/${serviceName}/metadata/${namespace}`,
+      {
+        body: metadata,
+        signal: options?.signal,
+      },
+    );
+  }
+
+  async deleteMetadata(
+    serviceName: string,
+    namespace: string,
+    options?: ApiOptions,
+  ): Promise<void> {
+    await this.api.fetch(
+      "DELETE",
+      `/api/v0/services/${serviceName}/metadata/${namespace}`,
+      {
+        body: {},
+        signal: options?.signal,
+      },
+    );
+  }
+
+  async listRoleMetadataNamespaces(
+    serviceName: string,
+    roleName: string,
+    options?: ApiOptions,
+  ): Promise<string[]> {
+    type RawMetadata = {
+      namespace: string;
+    };
+    const res = await this.api.fetch<{ metadata: RawMetadata[] }>(
+      "GET",
+      `/api/v0/services/${serviceName}/roles/${roleName}/metadata`,
+      { signal: options?.signal },
+    );
+    return res.metadata.map((m) => m.namespace);
+  }
+
+  async getRoleMetadata<T = unknown>(
+    serviceName: string,
+    roleName: string,
+    namespace: string,
+    options?: ApiOptions,
+  ): Promise<T> {
+    const res = await this.api.fetch<T>(
+      "GET",
+      `/api/v0/services/${serviceName}/roles/${roleName}/metadata/${namespace}`,
+      { signal: options?.signal },
+    );
+    return res;
+  }
+
+  async putRoleMetadata<T = unknown>(
+    serviceName: string,
+    roleName: string,
+    namespace: string,
+    metadata: T,
+    options?: ApiOptions,
+  ): Promise<void> {
+    await this.api.fetch<unknown, T>(
+      "PUT",
+      `/api/v0/services/${serviceName}/roles/${roleName}/metadata/${namespace}`,
+      {
+        body: metadata,
+        signal: options?.signal,
+      },
+    );
+  }
+
+  async deleteRoleMetadata(
+    serviceName: string,
+    roleName: string,
+    namespace: string,
+    options?: ApiOptions,
+  ): Promise<void> {
+    await this.api.fetch(
+      "DELETE",
+      `/api/v0/services/${serviceName}/roles/${roleName}/metadata/${namespace}`,
+      {
+        body: {},
+        signal: options?.signal,
+      },
+    );
+  }
 }

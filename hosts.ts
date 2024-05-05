@@ -307,6 +307,65 @@ export class HostsApiClient {
         : undefined,
     }));
   }
+
+  async listMetadataNamespaces(
+    hostId: string,
+    options?: ApiOptions,
+  ): Promise<string[]> {
+    type RawMetadata = {
+      namespace: string;
+    };
+    const res = await this.api.fetch<{ metadata: RawMetadata[] }>(
+      "GET",
+      `/api/v0/hosts/${hostId}/metadata`,
+      { signal: options?.signal },
+    );
+    return res.metadata.map((m) => m.namespace);
+  }
+
+  async getMetadata<T = unknown>(
+    hostId: string,
+    namespace: string,
+    options?: ApiOptions,
+  ): Promise<T> {
+    const res = await this.api.fetch<T>(
+      "GET",
+      `/api/v0/hosts/${hostId}/metadata/${namespace}`,
+      { signal: options?.signal },
+    );
+    return res;
+  }
+
+  async putMetadata<T = unknown>(
+    hostId: string,
+    namespace: string,
+    metadata: T,
+    options?: ApiOptions,
+  ): Promise<void> {
+    await this.api.fetch<unknown, T>(
+      "PUT",
+      `/api/v0/hosts/${hostId}/metadata/${namespace}`,
+      {
+        body: metadata,
+        signal: options?.signal,
+      },
+    );
+  }
+
+  async deleteMetadata(
+    hostId: string,
+    namespace: string,
+    options?: ApiOptions,
+  ): Promise<void> {
+    await this.api.fetch(
+      "DELETE",
+      `/api/v0/hosts/${hostId}/metadata/${namespace}`,
+      {
+        body: {},
+        signal: options?.signal,
+      },
+    );
+  }
 }
 
 type RawHost = {
