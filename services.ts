@@ -65,10 +65,14 @@ export class ServicesApiClient {
     serviceName: string,
     options?: ApiOptions,
   ): Promise<Service> {
-    const res = await this.api.fetch<Service>(
+    // deno-lint-ignore ban-types
+    const res = await this.api.fetch<Service, {}>(
       "DELETE",
       `/api/v0/services/${serviceName}`,
-      { signal: options?.signal },
+      {
+        body: {},
+        signal: options?.signal,
+      },
     );
     return res;
   }
@@ -113,10 +117,14 @@ export class ServicesApiClient {
     roleName: string,
     options?: ApiOptions,
   ): Promise<Role> {
-    const res = await this.api.fetch<Role>(
+    // deno-lint-ignore ban-types
+    const res = await this.api.fetch<Role, {}>(
       "DELETE",
       `/api/v0/services/${serviceName}/roles/${roleName}`,
-      { signal: options?.signal },
+      {
+        body: {},
+        signal: options?.signal,
+      },
     );
     return res;
   }
