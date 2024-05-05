@@ -38,7 +38,7 @@ export class MetricsApiClient {
         value: number;
       }>
     >;
-    await this.api.fetch<{ success: true }, RawInput>(
+    await this.api.fetch<unknown, RawInput>(
       "POST",
       "/api/v0/tsdb",
       {
@@ -65,7 +65,7 @@ export class MetricsApiClient {
         value: number;
       }>
     >;
-    await this.api.fetch<{ success: true }, RawInput>(
+    await this.api.fetch<unknown, RawInput>(
       "POST",
       "/api/v0/tsdb",
       {
@@ -92,7 +92,7 @@ export class MetricsApiClient {
         value: number;
       }>
     >;
-    await this.api.fetch<{ success: true }, RawInput>(
+    await this.api.fetch<unknown, RawInput>(
       "POST",
       `/api/v0/services/${serviceName}/tsdb`,
       {

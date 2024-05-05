@@ -36,7 +36,7 @@ export class GraphDefsApiClient {
     options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
-      { success: true },
+      unknown,
       readonly CreateHostGraphDefsInputGraphDef[]
     >(
       "POST",

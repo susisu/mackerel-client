@@ -183,7 +183,7 @@ export class HostsApiClient {
     options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
-      { success: true },
+      unknown,
       Readonly<{ status: HostStatus }>
     >(
       "POST",
@@ -201,7 +201,7 @@ export class HostsApiClient {
     options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
-      { success: true },
+      unknown,
       Readonly<{
         ids: readonly string[];
         status: HostStatus;
@@ -225,7 +225,7 @@ export class HostsApiClient {
     options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
-      { success: true },
+      unknown,
       Readonly<{ roleFullnames: readonly string[] }>
     >(
       "PUT",
@@ -242,7 +242,7 @@ export class HostsApiClient {
     options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
-      { success: true },
+      unknown,
       // deno-lint-ignore ban-types
       {}
     >(
@@ -260,7 +260,7 @@ export class HostsApiClient {
     options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
-      { success: true },
+      unknown,
       Readonly<{ ids: readonly string[] }>
     >(
       "POST",
