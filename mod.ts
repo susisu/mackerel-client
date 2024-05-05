@@ -1,20 +1,20 @@
 import { ApiClient } from "./api.ts";
-import { HostsClient } from "./hosts.ts";
-import { ServicesClient } from "./services.ts";
+import { HostsApiClient } from "./hosts.ts";
+import { ServicesApiClient } from "./services.ts";
 
 export type MackerelClientOptions = {
   apiBase?: string | URL | undefined;
 };
 
 export class MackerelClient {
-  readonly hosts: HostsClient;
-  readonly services: ServicesClient;
+  readonly hosts: HostsApiClient;
+  readonly services: ServicesApiClient;
 
   constructor(apiKey: string, options: MackerelClientOptions) {
     const apiClient = new ApiClient(apiKey, {
       base: options.apiBase,
     });
-    this.hosts = new HostsClient(apiClient);
-    this.services = new ServicesClient(apiClient);
+    this.hosts = new HostsApiClient(apiClient);
+    this.services = new ServicesApiClient(apiClient);
   }
 }

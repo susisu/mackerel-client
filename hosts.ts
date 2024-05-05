@@ -67,7 +67,7 @@ export type MonitoredStatusDetail = {
   memo: string | undefined;
 };
 
-export class HostsClient {
+export class HostsApiClient {
   private api: ApiClient;
 
   constructor(api: ApiClient) {

@@ -21,7 +21,7 @@ export type CreateRoleInput = {
   memo?: string | undefined;
 };
 
-export class ServicesClient {
+export class ServicesApiClient {
   private api: ApiClient;
 
   constructor(api: ApiClient) {
