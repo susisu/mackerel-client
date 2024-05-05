@@ -271,7 +271,7 @@ export class HostsApiClient {
     );
   }
 
-  async getMetricNames(
+  async listMetricNames(
     hostId: string,
     options?: { signal?: AbortSignal | undefined },
   ): Promise<string[]> {
@@ -283,7 +283,7 @@ export class HostsApiClient {
     return res.names;
   }
 
-  async getMonitoredStatuses(
+  async listMonitoredStatuses(
     hostId: string,
     options?: { signal?: AbortSignal | undefined },
   ): Promise<MonitoredStatus[]> {
