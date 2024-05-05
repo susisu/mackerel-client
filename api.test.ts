@@ -1,13 +1,7 @@
-import { assertEquals, assertRejects } from "jsr:@std/assert";
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  describe,
-  it,
-} from "jsr:@std/testing/bdd";
-import { assertSpyCalls, spy } from "jsr:@std/testing/mock";
-import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
+import { assertEquals, assertRejects } from "@std/assert";
+import { afterAll, afterEach, beforeAll, describe, it } from "@std/testing/bdd";
+import { assertSpyCalls, spy } from "@std/testing/mock";
+import * as mf from "mock_fetch";
 import { ApiClient } from "./api.ts";
 
 describe("ApiClient", () => {
