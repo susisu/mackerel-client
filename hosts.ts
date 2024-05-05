@@ -64,7 +64,7 @@ export type MonitoredStatus = {
 export type MonitoredStatusDetail = {
   type: "check";
   message: string;
-  memo: string | undefined;
+  memo: string;
 };
 
 export class HostsApiClient {
@@ -302,7 +302,7 @@ export class HostsApiClient {
         ? {
           type: ms.detail.type,
           message: ms.detail.message,
-          memo: ms.detail.memo ?? undefined,
+          memo: ms.detail.memo ?? "",
         }
         : undefined,
     }));
