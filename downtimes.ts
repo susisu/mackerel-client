@@ -237,7 +237,7 @@ function fromRawDowntime(raw: RawDowntime): Downtime {
           default: {
             // deno-lint-ignore no-explicit-any
             const type = (recurrence satisfies never as any).type;
-            throw new Error(`Unknown recurrence type: ${type}`);
+            throw new Error(`Unknown recurrence type: ${type}`, { cause: raw });
           }
         }
       })(raw.recurrence)
@@ -329,7 +329,7 @@ function toRawCreateDowntimeInput(
           default: {
             // deno-lint-ignore no-explicit-any
             const type = (recurrence satisfies never as any).type;
-            throw new Error(`Unknown recurrence type: ${type}`);
+            throw new Error(`Unknown recurrence type: ${type}`, { cause: input });
           }
         }
       })(input.recurrence)
