@@ -53,8 +53,9 @@ export class ApiClient {
 
     const res = await fetch(req);
     if (!res.ok) {
+      const text = await res.text();
       throw new Error(
-        `Failed to fetch ${method} ${path}: ${res.status}`,
+        `Failed to fetch ${method} ${path}: ${res.status} ${text}`,
         {
           cause: {
             request: req,
