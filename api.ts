@@ -1,18 +1,20 @@
-export type ApiClientOptions = {
-  base?: string | URL | undefined;
-};
+import { Options } from "./types.ts";
+
+export type ApiClientOptions = Options<{
+  base: string | URL;
+}>;
 
 export type FetchMethod = "GET" | "POST" | "PUT" | "DELETE";
 
-export type FetchOptions<Input> = {
-  params?: URLSearchParams;
-  body?: Input;
-  signal?: AbortSignal;
-};
+export type FetchOptions<Input> = Options<{
+  params: URLSearchParams;
+  body: Input;
+  signal: AbortSignal;
+}>;
 
 // deno-lint-ignore ban-types
-export type ApiOptions<T = {}> = Readonly<
-  { [K in keyof T]: T[K] | undefined } & { signal?: AbortSignal | undefined }
+export type ApiOptions<T = {}> = Options<
+  { [K in keyof T]: T[K] } & { signal: AbortSignal }
 >;
 
 export class ApiClient {

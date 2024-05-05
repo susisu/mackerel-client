@@ -1,10 +1,11 @@
+import { Options } from "./types.ts";
 import { ApiClient } from "./api.ts";
 import { HostsApiClient } from "./hosts.ts";
 import { ServicesApiClient } from "./services.ts";
 
-export type MackerelClientOptions = {
-  apiBase?: string | URL | undefined;
-};
+export type MackerelClientOptions = Options<{
+  apiBase: string | URL;
+}>;
 
 export class MackerelClient {
   readonly hosts: HostsApiClient;
