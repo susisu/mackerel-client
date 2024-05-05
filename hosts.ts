@@ -105,7 +105,7 @@ export class HostsApiClient {
     }
     const res = await this.api.fetch<{ hosts: RawHost[] }>(
       "GET",
-      `/api/v0/hosts`,
+      "/api/v0/hosts",
       {
         params,
         signal: options?.signal,
@@ -265,7 +265,7 @@ export class HostsApiClient {
       Readonly<{ ids: readonly string[] }>
     >(
       "POST",
-      `/api/v0/hosts/bulk-retire`,
+      "/api/v0/hosts/bulk-retire",
       {
         body: { ids: hostIds },
         signal: options?.signal,

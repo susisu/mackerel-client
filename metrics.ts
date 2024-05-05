@@ -168,7 +168,7 @@ export class MetricsApiClient {
       { tsdbLatest: Record<string, Record<string, RawDataPoint>> }
     >(
       "GET",
-      `/api/v0/tsdb/latest`,
+      "/api/v0/tsdb/latest",
       {
         params,
         signal: options?.signal,
