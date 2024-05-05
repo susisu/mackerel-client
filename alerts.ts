@@ -243,58 +243,64 @@ function fromRawBaseAlert(raw: RawBaseAlert): BaseAlert {
 }
 
 function fromRawAlert(raw: RawAlert): Alert {
+  const base: BaseAlert = fromRawBaseAlert(raw);
   switch (raw.type) {
     case "connectivity":
       return {
-        ...fromRawBaseAlert(raw),
+        ...base,
         type: "connectivity",
         hostId: raw.hostId,
       };
     case "host":
       return {
-        ...fromRawBaseAlert(raw),
+        ...base,
         type: "host",
         hostId: raw.hostId,
         value: raw.value,
       };
     case "service":
       return {
-        ...fromRawBaseAlert(raw),
+        ...base,
         type: "service",
         value: raw.value,
       };
     case "external":
       return {
-        ...fromRawBaseAlert(raw),
+        ...base,
         type: "external",
         value: raw.value ?? undefined,
         message: raw.message,
       };
     case "check":
       return {
-        ...fromRawBaseAlert(raw),
+        ...base,
         type: "check",
         hostId: raw.hostId,
         message: raw.message,
       };
     case "expression":
       return {
-        ...fromRawBaseAlert(raw),
+        ...base,
         type: "expression",
         value: raw.value ?? undefined,
       };
     case "anomalyDetection":
       return {
-        ...fromRawBaseAlert(raw),
+        ...base,
         type: "anomalyDetection",
         hostId: raw.hostId,
       };
     case "query":
       return {
-        ...fromRawBaseAlert(raw),
+        ...base,
         type: "query",
         value: raw.value,
         series: raw.series,
       };
+    default: {
+      // deno-lint-ignore no-explicit-any
+      const type = (raw as any).type;
+      throw new Error(`Unknown alert type: ${type}`);
+    }
   }
 }
