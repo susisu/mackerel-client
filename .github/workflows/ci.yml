@@ -1,0 +1,19 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - run: deno fmt --check
+      - run: deno lint
+      - run: deno test
