@@ -1,4 +1,4 @@
-import { Options } from "./types.ts";
+import type { Options } from "./types.ts";
 
 export type ApiClientOptions = Options<{
   base: string | URL;

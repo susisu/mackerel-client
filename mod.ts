@@ -1,4 +1,4 @@
-import { Options } from "./types.ts";
+import type { Options } from "./types.ts";
 import { ApiClient } from "./api.ts";
 import { HostsApiClient } from "./hosts.ts";
 import { ServicesApiClient } from "./services.ts";

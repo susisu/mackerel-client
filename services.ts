@@ -1,4 +1,4 @@
-import { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiClient, ApiOptions } from "./api.ts";
 
 export type Service = {
   name: string;

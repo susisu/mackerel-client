@@ -1,5 +1,5 @@
-import { ApiClient, ApiOptions } from "./api.ts";
-import { AlertStatus } from "./alerts.ts";
+import type { ApiClient, ApiOptions } from "./api.ts";
+import type { AlertStatus } from "./alerts.ts";
 
 export type Host = {
   id: string;
