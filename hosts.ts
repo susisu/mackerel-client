@@ -182,10 +182,7 @@ export class HostsApiClient {
     status: HostStatus,
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<
-      unknown,
-      Readonly<{ status: HostStatus }>
-    >(
+    await this.api.fetch<unknown, Readonly<{ status: HostStatus }>>(
       "POST",
       `/api/v0/hosts/${hostId}/status`,
       {
@@ -241,11 +238,7 @@ export class HostsApiClient {
     hostId: string,
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<
-      unknown,
-      // deno-lint-ignore ban-types
-      {}
-    >(
+    await this.api.fetch<unknown>(
       "POST",
       `/api/v0/hosts/${hostId}/retire`,
       {
@@ -259,10 +252,7 @@ export class HostsApiClient {
     hostIds: readonly string[],
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<
-      unknown,
-      Readonly<{ ids: readonly string[] }>
-    >(
+    await this.api.fetch<unknown, Readonly<{ ids: readonly string[] }>>(
       "POST",
       "/api/v0/hosts/bulk-retire",
       {

@@ -51,8 +51,7 @@ export class UsersApiClient {
   }
 
   async remove(userId: string, options?: ApiOptions): Promise<User> {
-    // deno-lint-ignore ban-types
-    const res = await this.api.fetch<RawUser, {}>(
+    const res = await this.api.fetch<RawUser>(
       "DELETE",
       `/api/v0/users/${userId}`,
       {
@@ -91,10 +90,7 @@ export class UsersApiClient {
   }
 
   async revokeInvitation(email: string, options?: ApiOptions): Promise<void> {
-    await this.api.fetch<
-      unknown,
-      Readonly<{ email: string }>
-    >(
+    await this.api.fetch<unknown, Readonly<{ email: string }>>(
       "POST",
       "/api/v0/invitations/revoke",
       {
