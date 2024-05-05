@@ -30,30 +30,30 @@ export type HostSize = "standard" | "micro";
 
 export type HostStatus = "working" | "standby" | "maintenance" | "poweroff";
 
-export type CreateHostInput = {
+export type CreateHostInput = Readonly<{
   name: string;
   displayName?: string | undefined;
   customIdentifier?: string | undefined;
   memo?: string | undefined;
   meta?: object | undefined;
-  interfaces?: CreateHostInputInterface[] | undefined;
-  roleFullnames?: string[] | undefined;
-  checks?: CreateHostInputCheckMonitor[] | undefined;
-};
+  interfaces?: readonly CreateHostInputInterface[] | undefined;
+  roleFullnames?: readonly string[] | undefined;
+  checks?: readonly CreateHostInputCheckMonitor[] | undefined;
+}>;
 
-export type CreateHostInputInterface = {
+export type CreateHostInputInterface = Readonly<{
   name: string;
   macAddress?: string | undefined;
-  ipv4Addresses?: string[] | undefined;
-  ipv6Addresses?: string[] | undefined;
+  ipv4Addresses?: readonly string[] | undefined;
+  ipv6Addresses?: readonly string[] | undefined;
   ipAddress?: string | undefined;
   ipv6Address?: string | undefined;
-};
+}>;
 
-export type CreateHostInputCheckMonitor = {
+export type CreateHostInputCheckMonitor = Readonly<{
   name: string;
   memo?: string | undefined;
-};
+}>;
 
 export type MonitoredStatus = {
   monitorId: string;
@@ -132,9 +132,8 @@ export class HostsApiClient {
       caseInsensitive: boolean;
     }>,
   ): Promise<Host> {
-    const caseInsensitive = options?.caseInsensitive ?? false;
     const params = new URLSearchParams();
-    if (caseInsensitive) {
+    if (options?.caseInsensitive) {
       params.set("caseInsensitive", "true");
     }
     const res = await this.api.fetch<{ host: RawHost }>(
@@ -186,7 +185,7 @@ export class HostsApiClient {
   ): Promise<void> {
     await this.api.fetch<
       { success: true },
-      { status: HostStatus }
+      Readonly<{ status: HostStatus }>
     >(
       "POST",
       `/api/v0/hosts/${hostId}/status`,
@@ -198,16 +197,16 @@ export class HostsApiClient {
   }
 
   async bulkUpdateStatuses(
-    hostIds: string[],
+    hostIds: readonly string[],
     status: HostStatus,
     options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
       { success: true },
-      {
-        ids: string[];
+      Readonly<{
+        ids: readonly string[];
         status: HostStatus;
-      }
+      }>
     >(
       "POST",
       "/api/v0/hosts/bulk-update-statuses",
@@ -223,12 +222,12 @@ export class HostsApiClient {
 
   async updateRoles(
     hostId: string,
-    roleFullnames: string[],
+    roleFullnames: readonly string[],
     options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
       { success: true },
-      { roleFullnames: string[] }
+      Readonly<{ roleFullnames: readonly string[] }>
     >(
       "PUT",
       `/api/v0/hosts/${hostId}/role-fullnames`,
@@ -258,12 +257,12 @@ export class HostsApiClient {
   }
 
   async bulkRetire(
-    hostIds: string[],
+    hostIds: readonly string[],
     options?: ApiOptions,
   ): Promise<void> {
     await this.api.fetch<
       { success: true },
-      { ids: string[] }
+      Readonly<{ ids: readonly string[] }>
     >(
       "POST",
       `/api/v0/hosts/bulk-retire`,
@@ -373,16 +372,16 @@ function fromRawHost(raw: RawHost): Host {
   };
 }
 
-type RawCreateHostInput = {
+type RawCreateHostInput = Readonly<{
   name: string;
   displayName?: string | undefined;
   customIdentifier?: string | undefined;
   memo?: string | undefined;
   meta: object;
-  interfaces?: CreateHostInputInterface[] | undefined;
-  roleFullnames?: string[] | undefined;
-  checks?: CreateHostInputCheckMonitor[] | undefined;
-};
+  interfaces?: readonly CreateHostInputInterface[] | undefined;
+  roleFullnames?: readonly string[] | undefined;
+  checks?: readonly CreateHostInputCheckMonitor[] | undefined;
+}>;
 
 function toRawCreateHostInput(input: CreateHostInput): RawCreateHostInput {
   return {

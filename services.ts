@@ -6,20 +6,20 @@ export type Service = {
   roles: string[];
 };
 
-export type CreateServiceInput = {
+export type CreateServiceInput = Readonly<{
   name: string;
   memo?: string | undefined;
-};
+}>;
 
 export type Role = {
   name: string;
   memo: string;
 };
 
-export type CreateRoleInput = {
+export type CreateRoleInput = Readonly<{
   name: string;
   memo?: string | undefined;
-};
+}>;
 
 export class ServicesApiClient {
   private api: ApiClient;
@@ -43,10 +43,10 @@ export class ServicesApiClient {
     input: CreateServiceInput,
     options?: ApiOptions,
   ): Promise<Service> {
-    type RawInput = {
+    type RawInput = Readonly<{
       name: string;
       memo: string;
-    };
+    }>;
     const res = await this.api.fetch<Service, RawInput>(
       "POST",
       "/api/v0/services",
@@ -90,10 +90,10 @@ export class ServicesApiClient {
     input: CreateRoleInput,
     options?: ApiOptions,
   ): Promise<Role> {
-    type RawInput = {
+    type RawInput = Readonly<{
       name: string;
       memo: string;
-    };
+    }>;
     const res = await this.api.fetch<Role, RawInput>(
       "POST",
       `/api/v0/services/${serviceName}/roles`,
