@@ -1,1 +1,300 @@
+import type { ApiClient, ApiOptions } from "./api.ts";
+
+export type Alert =
+  | ConnectivityAlert
+  | HostAlert
+  | ServiceAlert
+  | ExternalAlert
+  | CheckAlert
+  | ExpressionAlert
+  | AnomalyDetectionAlert
+  | QueryAlert;
+
+type BaseAlert = {
+  id: string;
+  status: AlertStatus;
+  openedAt: Date;
+  isClosed: boolean;
+  closedAt: Date | undefined;
+  closeReason: string | undefined;
+  memo: string;
+  monitorId: string;
+};
+
+export type ConnectivityAlert = BaseAlert & {
+  type: "connectivity";
+  hostId: string;
+};
+
+export type HostAlert = BaseAlert & {
+  type: "host";
+  hostId: string;
+  value: number;
+};
+
+export type ServiceAlert = BaseAlert & {
+  type: "service";
+  value: number;
+};
+
+export type ExternalAlert = BaseAlert & {
+  type: "external";
+  value: number | undefined;
+  message: string;
+};
+
+export type CheckAlert = BaseAlert & {
+  type: "check";
+  hostId: string;
+  message: string;
+};
+
+export type ExpressionAlert = BaseAlert & {
+  type: "expression";
+  value: number | undefined;
+};
+
+export type AnomalyDetectionAlert = BaseAlert & {
+  type: "anomalyDetection";
+  hostId: string;
+};
+
+export type QueryAlert = BaseAlert & {
+  type: "query";
+  value: number;
+  series: QueryAlertSeries;
+};
+
+export type AlertType = Alert["type"];
+
 export type AlertStatus = "OK" | "CRITICAL" | "WARNING" | "UNKNOWN";
+
+export type QueryAlertSeries = {
+  name: string;
+  labels: Record<string, string>;
+};
+
+export type UpdateAlertInput = Readonly<{
+  memo: string;
+}>;
+
+export class AlertsApiClient {
+  private api: ApiClient;
+
+  constructor(api: ApiClient) {
+    this.api = api;
+  }
+
+  async list(
+    options?: ApiOptions<{
+      includeClosed: boolean;
+      limit: number;
+      cursor: string;
+    }>,
+  ): Promise<{
+    alerts: Alert[];
+    cursor: string | undefined;
+  }> {
+    const params = new URLSearchParams();
+    if (options?.includeClosed) {
+      params.set("withClosed", "true");
+    }
+    if (options?.limit !== undefined) {
+      params.set("limit", options.limit.toString());
+    }
+    if (options?.cursor !== undefined) {
+      params.set("nextId", options.cursor);
+    }
+    const res = await this.api.fetch<{
+      alerts: RawAlert[];
+      nextId?: string | null | undefined;
+    }>(
+      "GET",
+      "/api/v0/alerts",
+      {
+        params,
+        signal: options?.signal,
+      },
+    );
+    return {
+      alerts: res.alerts.map((host) => fromRawAlert(host)),
+      cursor: res.nextId ?? undefined,
+    };
+  }
+
+  async get(alertId: string, options?: ApiOptions): Promise<Alert> {
+    const res = await this.api.fetch<RawAlert>(
+      "GET",
+      `/api/v0/alerts/${alertId}`,
+      { signal: options?.signal },
+    );
+    return fromRawAlert(res);
+  }
+
+  async update(
+    alertId: string,
+    input: UpdateAlertInput,
+    options?: ApiOptions,
+  ): Promise<void> {
+    await this.api.fetch<unknown, UpdateAlertInput>(
+      "PUT",
+      `/api/v0/alerts/${alertId}`,
+      {
+        body: { memo: input.memo },
+        signal: options?.signal,
+      },
+    );
+  }
+
+  async close(
+    alertId: string,
+    reason: string,
+    options?: ApiOptions,
+  ): Promise<Alert> {
+    const res = await this.api.fetch<RawAlert, Readonly<{ reason: string }>>(
+      "POST",
+      `/api/v0/alerts/${alertId}/close`,
+      {
+        body: { reason },
+        signal: options?.signal,
+      },
+    );
+    return fromRawAlert(res);
+  }
+}
+
+type RawAlert =
+  | RawConnectivityAlert
+  | RawHostAlert
+  | RawServiceAlert
+  | RawExternalAlert
+  | RawCheckAlert
+  | RawExpressionAlert
+  | RawAnomalyDetectionAlert
+  | RawQueryAlert;
+
+type RawBaseAlert = {
+  id: string;
+  status: AlertStatus;
+  openedAt: number;
+  closedAt?: number | null | undefined;
+  reason?: string | null | undefined;
+  memo: string;
+  monitorId: string;
+};
+
+type RawConnectivityAlert = RawBaseAlert & {
+  type: "connectivity";
+  hostId: string;
+};
+
+type RawHostAlert = RawBaseAlert & {
+  type: "host";
+  hostId: string;
+  value: number;
+};
+
+type RawServiceAlert = RawBaseAlert & {
+  type: "service";
+  value: number;
+};
+
+type RawExternalAlert = RawBaseAlert & {
+  type: "external";
+  value?: number | null | undefined;
+  message: string;
+};
+
+type RawCheckAlert = RawBaseAlert & {
+  type: "check";
+  hostId: string;
+  message: string;
+};
+
+type RawExpressionAlert = RawBaseAlert & {
+  type: "expression";
+  value?: number | null | undefined;
+};
+
+type RawAnomalyDetectionAlert = RawBaseAlert & {
+  type: "anomalyDetection";
+  hostId: string;
+};
+
+type RawQueryAlert = RawBaseAlert & {
+  type: "query";
+  value: number;
+  series: QueryAlertSeries;
+};
+
+function fromRawBaseAlert(raw: RawBaseAlert): BaseAlert {
+  return {
+    id: raw.id,
+    status: raw.status,
+    openedAt: new Date(raw.openedAt * 1000),
+    isClosed: typeof raw.closedAt === "number",
+    closedAt: typeof raw.closedAt === "number"
+      ? new Date(raw.closedAt * 1000)
+      : undefined,
+    closeReason: raw.reason ?? undefined,
+    memo: raw.memo,
+    monitorId: raw.monitorId,
+  };
+}
+
+function fromRawAlert(raw: RawAlert): Alert {
+  switch (raw.type) {
+    case "connectivity":
+      return {
+        ...fromRawBaseAlert(raw),
+        type: "connectivity",
+        hostId: raw.hostId,
+      };
+    case "host":
+      return {
+        ...fromRawBaseAlert(raw),
+        type: "host",
+        hostId: raw.hostId,
+        value: raw.value,
+      };
+    case "service":
+      return {
+        ...fromRawBaseAlert(raw),
+        type: "service",
+        value: raw.value,
+      };
+    case "external":
+      return {
+        ...fromRawBaseAlert(raw),
+        type: "external",
+        value: raw.value ?? undefined,
+        message: raw.message,
+      };
+    case "check":
+      return {
+        ...fromRawBaseAlert(raw),
+        type: "check",
+        hostId: raw.hostId,
+        message: raw.message,
+      };
+    case "expression":
+      return {
+        ...fromRawBaseAlert(raw),
+        type: "expression",
+        value: raw.value ?? undefined,
+      };
+    case "anomalyDetection":
+      return {
+        ...fromRawBaseAlert(raw),
+        type: "anomalyDetection",
+        hostId: raw.hostId,
+      };
+    case "query":
+      return {
+        ...fromRawBaseAlert(raw),
+        type: "query",
+        value: raw.value,
+        series: raw.series,
+      };
+  }
+}
