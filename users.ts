@@ -21,6 +21,19 @@ export type UserAuthenticationMethod =
   | "nifty"
   | "kddi";
 
+export type Invitation = {
+  email: string;
+  authority: InvitationAuthority;
+  expiresAt: Date;
+};
+
+export type InvitationAuthority = Exclude<UserAuthority, "owner">;
+
+export type InviteInput = Readonly<{
+  email: string;
+  authority: InvitationAuthority;
+}>;
+
 export class UsersApiClient {
   private api: ApiClient;
 
@@ -49,6 +62,47 @@ export class UsersApiClient {
     );
     return fromRawUser(res);
   }
+
+  async listInvitations(options?: ApiOptions): Promise<Invitation[]> {
+    const res = await this.api.fetch<{ invitations: RawInvitation[] }>(
+      "GET",
+      "/api/v0/invitations",
+      { signal: options?.signal },
+    );
+    return res.invitations.map((i) => fromRawInvitation(i));
+  }
+
+  async invite(
+    input: InviteInput,
+    options?: ApiOptions,
+  ): Promise<Invitation> {
+    const res = await this.api.fetch<RawInvitation, InviteInput>(
+      "POST",
+      "/api/v0/invitations",
+      {
+        body: {
+          email: input.email,
+          authority: input.authority,
+        },
+        signal: options?.signal,
+      },
+    );
+    return fromRawInvitation(res);
+  }
+
+  async revokeInvitation(email: string, options?: ApiOptions): Promise<void> {
+    await this.api.fetch<
+      unknown,
+      Readonly<{ email: string }>
+    >(
+      "POST",
+      "/api/v0/invitations/revoke",
+      {
+        body: { email },
+        signal: options?.signal,
+      },
+    );
+  }
 }
 
 type RawUser = {
@@ -72,5 +126,19 @@ function fromRawUser(raw: RawUser): User {
     isMfaEnabled: raw.isMFAEnabled,
     authenticationMethods: raw.authenticationMethods,
     joinedAt: new Date(raw.joinedAt * 1000),
+  };
+}
+
+type RawInvitation = {
+  email: string;
+  authority: InvitationAuthority;
+  expiresAt: number;
+};
+
+function fromRawInvitation(raw: RawInvitation): Invitation {
+  return {
+    email: raw.email,
+    authority: raw.authority,
+    expiresAt: new Date(raw.expiresAt * 1000),
   };
 }
