@@ -166,8 +166,8 @@ export class HostsApiClient {
     hostId: string,
     input: CreateHostInput,
     options?: ApiOptions,
-  ): Promise<{ id: string }> {
-    const res = await this.api.fetch<{ id: string }, RawCreateHostInput>(
+  ): Promise<void> {
+    await this.api.fetch<unknown, RawCreateHostInput>(
       "PUT",
       `/api/v0/hosts/${hostId}`,
       {
@@ -175,7 +175,6 @@ export class HostsApiClient {
         signal: options?.signal,
       },
     );
-    return res;
   }
 
   async updateStatus(
