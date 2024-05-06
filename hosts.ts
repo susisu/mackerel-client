@@ -19,7 +19,7 @@ export type Host = {
   retiredAt: Date | undefined;
   interfaces: Interface[];
   /** `{ serviceName: [roleName] }` */
-  roles: Record<string, string[]>;
+  roles: { [serviceName: string]: string[] };
 };
 
 export type Interface = {
@@ -43,7 +43,7 @@ export type CreateHostInput = Readonly<{
   meta?: object | undefined;
   interfaces?: readonly CreateHostInputInterface[] | undefined;
   /** `{ serviceName: [roleName] }` */
-  roles?: Readonly<Record<string, readonly string[]>> | undefined;
+  roles?: { readonly [serviceName: string]: readonly string[] } | undefined;
   checks?: readonly CreateHostInputCheckMonitor[] | undefined;
 }>;
 
@@ -382,7 +382,7 @@ type RawHost = {
   isRetired: boolean;
   retiredAt?: number | null | undefined;
   interfaces: RawInterface[];
-  roles: Record<string, string[]>;
+  roles: { [serviceName: string]: string[] };
 };
 
 type RawInterface = {

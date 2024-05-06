@@ -159,7 +159,11 @@ export class MetricsApiClient {
     hostIds: readonly string[],
     metricNames: readonly string[],
     options?: ApiOptions,
-  ): Promise<Record<string, Record<string, DataPoint>>> {
+  ): Promise<{
+    [hostId: string]: {
+      [metricName: string]: DataPoint;
+    };
+  }> {
     const params = new URLSearchParams();
     for (const hostId of hostIds) {
       params.append("hostId", hostId);
@@ -167,7 +171,13 @@ export class MetricsApiClient {
     for (const metricName of metricNames) {
       params.append("name", metricName);
     }
-    const res = await this.api.fetch<{ tsdbLatest: Record<string, Record<string, RawDataPoint>> }>(
+    const res = await this.api.fetch<{
+      tsdbLatest: {
+        [hostId: string]: {
+          [metricName: string]: RawDataPoint;
+        };
+      };
+    }>(
       "GET",
       "/api/v0/tsdb/latest",
       {
