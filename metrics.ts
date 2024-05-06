@@ -1,5 +1,10 @@
 import type { ApiClient, ApiOptions } from "./api.ts";
 
+export type DataPoint = {
+  time: Date;
+  value: number;
+};
+
 export type PostMetricsInputDataPoint = Readonly<{
   name: string;
   time: Date;
@@ -13,97 +18,11 @@ export type BulkPostHostMetricsInputDataPoint = Readonly<{
   value: number;
 }>;
 
-export type DataPoint = {
-  time: Date;
-  value: number;
-};
-
 export class MetricsApiClient {
   private api: ApiClient;
 
   constructor(api: ApiClient) {
     this.api = api;
-  }
-
-  async postHostMetrics(
-    hostId: string,
-    dataPoints: readonly PostMetricsInputDataPoint[],
-    options?: ApiOptions,
-  ): Promise<void> {
-    type RawInput = ReadonlyArray<
-      Readonly<{
-        hostId: string;
-        name: string;
-        time: number;
-        value: number;
-      }>
-    >;
-    await this.api.fetch<unknown, RawInput>(
-      "POST",
-      "/api/v0/tsdb",
-      {
-        body: dataPoints.map((dp) => ({
-          hostId,
-          name: dp.name,
-          time: Math.floor(dp.time.getTime() / 1000),
-          value: dp.value,
-        })),
-        signal: options?.signal,
-      },
-    );
-  }
-
-  async bulkPostHostMetrics(
-    dataPoints: readonly BulkPostHostMetricsInputDataPoint[],
-    options?: ApiOptions,
-  ): Promise<void> {
-    type RawInput = ReadonlyArray<
-      Readonly<{
-        hostId: string;
-        name: string;
-        time: number;
-        value: number;
-      }>
-    >;
-    await this.api.fetch<unknown, RawInput>(
-      "POST",
-      "/api/v0/tsdb",
-      {
-        body: dataPoints.map((dp) => ({
-          hostId: dp.hostId,
-          name: dp.name,
-          time: Math.floor(dp.time.getTime() / 1000),
-          value: dp.value,
-        })),
-        signal: options?.signal,
-      },
-    );
-  }
-
-  async postServiceMetrics(
-    serviceName: string,
-    dataPoints: readonly PostMetricsInputDataPoint[],
-    options?: ApiOptions,
-  ): Promise<void> {
-    type RawInput = ReadonlyArray<
-      Readonly<{
-        name: string;
-        time: number;
-        value: number;
-      }>
-    >;
-    await this.api.fetch<unknown, RawInput>(
-      "POST",
-      `/api/v0/services/${serviceName}/tsdb`,
-      {
-        body: dataPoints.map((dp) => ({
-          name: dp.name,
-          time: Math.floor(dp.time.getTime() / 1000),
-          value: dp.value,
-        })),
-        signal: options?.signal,
-      },
-    );
   }
 
   async getHostMetrics(
@@ -196,6 +115,87 @@ export class MetricsApiClient {
           ) => [metricName, fromRawDataPoint(dp)]),
         ),
       ]),
+    );
+  }
+
+  async postHostMetrics(
+    hostId: string,
+    dataPoints: readonly PostMetricsInputDataPoint[],
+    options?: ApiOptions,
+  ): Promise<void> {
+    type RawInput = ReadonlyArray<
+      Readonly<{
+        hostId: string;
+        name: string;
+        time: number;
+        value: number;
+      }>
+    >;
+    await this.api.fetch<unknown, RawInput>(
+      "POST",
+      "/api/v0/tsdb",
+      {
+        body: dataPoints.map((dp) => ({
+          hostId,
+          name: dp.name,
+          time: Math.floor(dp.time.getTime() / 1000),
+          value: dp.value,
+        })),
+        signal: options?.signal,
+      },
+    );
+  }
+
+  async bulkPostHostMetrics(
+    dataPoints: readonly BulkPostHostMetricsInputDataPoint[],
+    options?: ApiOptions,
+  ): Promise<void> {
+    type RawInput = ReadonlyArray<
+      Readonly<{
+        hostId: string;
+        name: string;
+        time: number;
+        value: number;
+      }>
+    >;
+    await this.api.fetch<unknown, RawInput>(
+      "POST",
+      "/api/v0/tsdb",
+      {
+        body: dataPoints.map((dp) => ({
+          hostId: dp.hostId,
+          name: dp.name,
+          time: Math.floor(dp.time.getTime() / 1000),
+          value: dp.value,
+        })),
+        signal: options?.signal,
+      },
+    );
+  }
+
+  async postServiceMetrics(
+    serviceName: string,
+    dataPoints: readonly PostMetricsInputDataPoint[],
+    options?: ApiOptions,
+  ): Promise<void> {
+    type RawInput = ReadonlyArray<
+      Readonly<{
+        name: string;
+        time: number;
+        value: number;
+      }>
+    >;
+    await this.api.fetch<unknown, RawInput>(
+      "POST",
+      `/api/v0/services/${serviceName}/tsdb`,
+      {
+        body: dataPoints.map((dp) => ({
+          name: dp.name,
+          time: Math.floor(dp.time.getTime() / 1000),
+          value: dp.value,
+        })),
+        signal: options?.signal,
+      },
     );
   }
 }
