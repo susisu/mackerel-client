@@ -1,4 +1,8 @@
 import type { ApiClient, ApiOptions } from "./api.ts";
+import type { Extends } from "./types.ts";
+import { assertType } from "./types.ts";
+
+assertType<Extends<GraphAnnotation, CreateGraphAnnotationInput>>(true);
 
 export type GraphAnnotation = {
   id: string;
