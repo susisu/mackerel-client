@@ -1,4 +1,8 @@
+import type { Extends } from "./types.ts";
+import { assertType } from "./types.ts";
 import type { ApiClient, ApiOptions } from "./api.ts";
+
+assertType<Extends<AlertGroupSetting, CreateAlertGroupSettingInput>>(true);
 
 export type AlertGroupSetting = {
   id: string;

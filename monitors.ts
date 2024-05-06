@@ -1,6 +1,6 @@
-import type { ApiClient, ApiOptions } from "./api.ts";
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
+import type { ApiClient, ApiOptions } from "./api.ts";
 
 assertType<Extends<Monitor, CreateMonitorInput>>(true);
 
@@ -576,7 +576,7 @@ type RawCreateConnectivityMonitorInput =
     type: "connectivity";
     scopes?: readonly string[] | undefined;
     excludeScopes?: readonly string[] | undefined;
-    alertStatusOnGone?: "CRITICAL" | "WARNING" | undefined;
+    alertStatusOnGone?: ConnectivityMonitorAlertStatus | undefined;
   }>;
 
 type RawCreateHostMonitorInput =

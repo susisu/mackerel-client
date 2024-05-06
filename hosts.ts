@@ -1,7 +1,7 @@
-import type { ApiClient, ApiOptions } from "./api.ts";
-import type { AlertStatus } from "./alerts.ts";
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
+import type { ApiClient, ApiOptions } from "./api.ts";
+import type { AlertStatus } from "./alerts.ts";
 
 assertType<Extends<Host, CreateHostInput>>(true);
 

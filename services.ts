@@ -1,6 +1,6 @@
-import type { ApiClient, ApiOptions } from "./api.ts";
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
+import type { ApiClient, ApiOptions } from "./api.ts";
 
 assertType<Extends<Service, CreateServiceInput>>(true);
 assertType<Extends<Role, CreateRoleInput>>(true);
