@@ -14,12 +14,17 @@
   "exports": {
     ".": "./mod.ts",
     "./api": "./api.ts",
+    "./alertGroupSettings": "./alertGroupSettings.ts",
     "./alerts": "./alerts.ts",
+    "./awsIntegrations": "./awsIntegrations.ts",
+    "./channels": "./channels.ts",
+    "./dashboards": "./dashboards.ts",
     "./downtimes": "./downtimes.ts",
     "./graphAnnotations": "./graphAnnotations.ts",
     "./graphDefs": "./graphDefs.ts",
     "./hosts": "./hosts.ts",
     "./metrics": "./metrics.ts",
+    "./monitors": "./monitors.ts",
     "./org": "./org.ts",
     "./services": "./services.ts",
     "./users": "./users.ts"
