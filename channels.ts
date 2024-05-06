@@ -5,6 +5,7 @@ import type { ApiClient, ApiOptions } from "./api.ts";
 assertType<Extends<Extract<Channel, { type: CreateChannelInput["type"] }>, CreateChannelInput>>(
   true,
 );
+assertType<Extends<NotificationGroup, CreateNotificationGroupInput>>(true);
 
 export type Channel = CommonChannel | EmailChannel | SlackChannel | WebhookChannel;
 
@@ -103,6 +104,51 @@ export type CreateWebhookChannelInput =
     events?: readonly ChannelEvent[] | undefined;
   }>;
 
+export type NotificationGroup = {
+  id: string;
+  name: string;
+  notificationLevel: NotificationGroupNotificationLevel;
+  childNotificationGroupIds: string[];
+  childChannelIds: string[];
+  scopes: {
+    services: NotificationGroupScopeService[];
+    monitors: NotificationGroupScopeMonitor[];
+  };
+};
+
+export type NotificationGroupNotificationLevel = "all" | "critical";
+
+export type NotificationGroupScopeService = {
+  name: string;
+};
+
+export type NotificationGroupScopeMonitor = {
+  id: string;
+  maskDefaultNotificationGroup: boolean;
+};
+
+export type CreateNotificationGroupInput = Readonly<{
+  name: string;
+  notificationLevel?: NotificationGroupNotificationLevel | undefined;
+  childNotificationGroupIds?: readonly string[] | undefined;
+  childChannelIds?: readonly string[] | undefined;
+  scopes?:
+    | Readonly<{
+      services?: readonly CreateNotificationGroupInputScopeService[] | undefined;
+      monitors?: readonly CreateNotificationGroupInputScopeMonitor[] | undefined;
+    }>
+    | undefined;
+}>;
+
+export type CreateNotificationGroupInputScopeService = Readonly<{
+  name: string;
+}>;
+
+export type CreateNotificationGroupInputScopeMonitor = Readonly<{
+  id: string;
+  maskDefaultNotificationGroup?: boolean | undefined;
+}>;
+
 export class ChannelsApiClient {
   private api: ApiClient;
 
@@ -141,6 +187,61 @@ export class ChannelsApiClient {
       },
     );
     return fromRawChannel(res);
+  }
+
+  async listNotificationGroups(options?: ApiOptions): Promise<NotificationGroup[]> {
+    const res = await this.api.fetch<{ notificationGroups: RawNotificationGroup[] }>(
+      "GET",
+      "/api/v0/notification-groups",
+      { signal: options?.signal },
+    );
+    return res.notificationGroups.map((group) => fromRawNotificationGroup(group));
+  }
+
+  async createNotificationGroups(
+    input: CreateNotificationGroupInput,
+    options?: ApiOptions,
+  ): Promise<NotificationGroup> {
+    const res = await this.api.fetch<RawNotificationGroup, RawCreateNotificationGroupInput>(
+      "POST",
+      "/api/v0/notification-groups",
+      {
+        body: toRawCreateNotificationGroupInput(input),
+        signal: options?.signal,
+      },
+    );
+    return fromRawNotificationGroup(res);
+  }
+
+  async updateNotificationGroups(
+    groupId: string,
+    input: CreateNotificationGroupInput,
+    options?: ApiOptions,
+  ): Promise<NotificationGroup> {
+    const res = await this.api.fetch<RawNotificationGroup, RawCreateNotificationGroupInput>(
+      "PUT",
+      `/api/v0/notification-groups/${groupId}`,
+      {
+        body: toRawCreateNotificationGroupInput(input),
+        signal: options?.signal,
+      },
+    );
+    return fromRawNotificationGroup(res);
+  }
+
+  async deleteNotificationGroups(
+    groupId: string,
+    options?: ApiOptions,
+  ): Promise<NotificationGroup> {
+    const res = await this.api.fetch<RawNotificationGroup>(
+      "DELETE",
+      `/api/v0/notification-groups/${groupId}`,
+      {
+        body: {},
+        signal: options?.signal,
+      },
+    );
+    return fromRawNotificationGroup(res);
   }
 }
 
@@ -327,4 +428,78 @@ function toRawCreateChannelInput(input: CreateChannelInput): RawCreateChannelInp
       throw new Error(`Unknown channel type: ${type}`, { cause: input });
     }
   }
+}
+
+type RawNotificationGroup = {
+  id: string;
+  name: string;
+  notificationLevel: NotificationGroupNotificationLevel;
+  childNotificationGroupIds: string[];
+  childChannelIds: string[];
+  services?: RawNotificationGroupService[] | null | undefined;
+  monitors?: RawNotificationGroupMonitor[] | null | undefined;
+};
+
+type RawNotificationGroupService = {
+  name: string;
+};
+
+type RawNotificationGroupMonitor = {
+  id: string;
+  skipDefault: boolean;
+};
+
+function fromRawNotificationGroup(raw: RawNotificationGroup): NotificationGroup {
+  return {
+    id: raw.id,
+    name: raw.name,
+    notificationLevel: raw.notificationLevel,
+    childNotificationGroupIds: raw.childNotificationGroupIds,
+    childChannelIds: raw.childChannelIds,
+    scopes: {
+      services: raw.services ?? [],
+      monitors: raw.monitors
+        ? raw.monitors.map((monitor) => ({
+          id: monitor.id,
+          maskDefaultNotificationGroup: monitor.skipDefault,
+        }))
+        : [],
+    },
+  };
+}
+
+type RawCreateNotificationGroupInput = Readonly<{
+  name: string;
+  notificationLevel: NotificationGroupNotificationLevel;
+  childNotificationGroupIds: readonly string[];
+  childChannelIds: readonly string[];
+  services?: readonly RawCreateNotificationGroupInputService[] | undefined;
+  monitors?: readonly RawCreateNotificationGroupInputMonitor[] | undefined;
+}>;
+
+type RawCreateNotificationGroupInputService = Readonly<{
+  name: string;
+}>;
+
+type RawCreateNotificationGroupInputMonitor = Readonly<{
+  id: string;
+  skipDefault: boolean;
+}>;
+
+function toRawCreateNotificationGroupInput(
+  input: CreateNotificationGroupInput,
+): RawCreateNotificationGroupInput {
+  return {
+    name: input.name,
+    notificationLevel: input.notificationLevel ?? "all",
+    childNotificationGroupIds: input.childNotificationGroupIds ?? [],
+    childChannelIds: input.childChannelIds ?? [],
+    services: input.scopes?.services,
+    monitors: input.scopes?.monitors
+      ? input.scopes.monitors.map((monitor) => ({
+        id: monitor.id,
+        skipDefault: monitor.maskDefaultNotificationGroup ?? false,
+      }))
+      : undefined,
+  };
 }
