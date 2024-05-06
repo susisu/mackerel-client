@@ -8,6 +8,7 @@ import { GraphAnnotationsApiClient } from "./graphAnnotations.ts";
 import { GraphDefsApiClient } from "./graphDefs.ts";
 import { HostsApiClient } from "./hosts.ts";
 import { MetricsApiClient } from "./metrics.ts";
+import { MonitorsApiClient } from "./monitors.ts";
 import { OrgApiClient } from "./org.ts";
 import { ServicesApiClient } from "./services.ts";
 import { UsersApiClient } from "./users.ts";
@@ -23,6 +24,7 @@ export class MackerelClient {
   readonly graphDefs: GraphDefsApiClient;
   readonly hosts: HostsApiClient;
   readonly metrics: MetricsApiClient;
+  readonly monitors: MonitorsApiClient;
   readonly org: OrgApiClient;
   readonly services: ServicesApiClient;
   readonly users: UsersApiClient;
@@ -37,6 +39,7 @@ export class MackerelClient {
     this.graphDefs = new GraphDefsApiClient(apiClient);
     this.hosts = new HostsApiClient(apiClient);
     this.metrics = new MetricsApiClient(apiClient);
+    this.monitors = new MonitorsApiClient(apiClient);
     this.org = new OrgApiClient(apiClient);
     this.services = new ServicesApiClient(apiClient);
     this.users = new UsersApiClient(apiClient);
