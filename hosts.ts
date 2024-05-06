@@ -18,6 +18,7 @@ export type Host = {
   isRetired: boolean;
   retiredAt: Date | undefined;
   interfaces: Interface[];
+  /** `{ serviceName: [roleName] }` */
   roles: Record<string, string[]>;
 };
 
@@ -41,6 +42,7 @@ export type CreateHostInput = Readonly<{
   memo?: string | undefined;
   meta?: object | undefined;
   interfaces?: readonly CreateHostInputInterface[] | undefined;
+  /** `{ serviceName: [roleName] }` */
   roles?: Readonly<Record<string, readonly string[]>> | undefined;
   checks?: readonly CreateHostInputCheckMonitor[] | undefined;
 }>;

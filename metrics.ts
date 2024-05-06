@@ -152,6 +152,9 @@ export class MetricsApiClient {
     return res.metrics.map((dp) => fromRawDataPoint(dp));
   }
 
+  /**
+   * @returns `{ hostId: { metricName: dataPoint } }`
+   */
   async getLatestHostMetricValues(
     hostIds: readonly string[],
     metricNames: readonly string[],

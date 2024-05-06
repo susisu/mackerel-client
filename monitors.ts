@@ -202,6 +202,7 @@ export type CreateExternalMonitorInput =
     request: Readonly<{
       url: string | URL;
       method?: ExternalMonitorHttpMethod | undefined;
+      /** `{ name: value }` or `Headers` object */
       headers?: Record<string, string> | Headers | undefined;
       body?: string | undefined;
       followRedirects?: boolean | undefined;

@@ -71,6 +71,7 @@ export type AlertStatus = "OK" | "CRITICAL" | "WARNING" | "UNKNOWN";
 
 export type QueryAlertSeries = {
   name: string;
+  /** `{ key: value }` */
   labels: Record<string, string>;
 };
 
