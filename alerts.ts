@@ -71,8 +71,8 @@ export type AlertStatus = "OK" | "CRITICAL" | "WARNING" | "UNKNOWN";
 
 export type QueryAlertSeries = {
   name: string;
-  /** `{ key: value }` */
-  labels: { [key: string]: string };
+  /** `Map<key, value>` */
+  labels: Map<string, string>;
 };
 
 export type UpdateAlertInput = Readonly<{
@@ -219,13 +219,18 @@ type RawAnomalyDetectionAlert = RawBaseAlert & {
 type RawQueryAlert = RawBaseAlert & {
   type: "query";
   value: number;
-  series: QueryAlertSeries;
+  series: RawQueryAlertSeries;
 };
 
 type RawCheckAlert = RawBaseAlert & {
   type: "check";
   hostId: string;
   message: string;
+};
+
+type RawQueryAlertSeries = {
+  name: string;
+  labels: { [key: string]: string };
 };
 
 function fromRawBaseAlert(raw: RawBaseAlert): BaseAlert {
@@ -287,7 +292,10 @@ function fromRawAlert(raw: RawAlert): Alert {
         ...base,
         type: "query",
         value: raw.value,
-        series: raw.series,
+        series: {
+          name: raw.series.name,
+          labels: new Map(Object.entries(raw.series.labels)),
+        },
       };
     case "check":
       return {
