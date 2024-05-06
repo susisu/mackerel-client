@@ -1,5 +1,9 @@
 import type { ApiClient, ApiOptions } from "./api.ts";
 import type { AlertStatus } from "./alerts.ts";
+import type { Extends } from "./types.ts";
+import { assertType } from "./types.ts";
+
+assertType<Extends<Host, CreateHostInput>>(true);
 
 export type Host = {
   id: string;
@@ -37,7 +41,7 @@ export type CreateHostInput = Readonly<{
   memo?: string | undefined;
   meta?: object | undefined;
   interfaces?: readonly CreateHostInputInterface[] | undefined;
-  roleFullnames?: readonly string[] | undefined;
+  roles?: Readonly<Record<string, readonly string[]>> | undefined;
   checks?: readonly CreateHostInputCheckMonitor[] | undefined;
 }>;
 
@@ -432,7 +436,11 @@ function toRawCreateHostInput(input: CreateHostInput): RawCreateHostInput {
     memo: input.memo,
     meta: input.meta ?? {},
     interfaces: input.interfaces,
-    roleFullnames: input.roleFullnames,
+    roleFullnames: input.roles
+      ? Object.entries(input.roles).flatMap(([serviceName, roleNames]) =>
+        roleNames.map((roleName) => `${serviceName}:${roleName}`)
+      )
+      : undefined,
     checks: input.checks,
   };
 }
