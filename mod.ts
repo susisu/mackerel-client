@@ -2,6 +2,7 @@ import type { Options } from "./types.ts";
 
 import { ApiClient } from "./api.ts";
 
+import { AlertGroupSettingsApiClient } from "./alertGroupSettings.ts";
 import { AlertsApiClient } from "./alerts.ts";
 import { DashboardsApiClient } from "./dashboards.ts";
 import { DowntimesApiClient } from "./downtimes.ts";
@@ -19,6 +20,7 @@ export type MackerelClientOptions = Options<{
 }>;
 
 export class MackerelClient {
+  readonly alertGroupSettings: AlertGroupSettingsApiClient;
   readonly alerts: AlertsApiClient;
   readonly dashboards: DashboardsApiClient;
   readonly downtimes: DowntimesApiClient;
@@ -35,6 +37,7 @@ export class MackerelClient {
     const apiClient = new ApiClient(apiKey, {
       base: options?.apiBase,
     });
+    this.alertGroupSettings = new AlertGroupSettingsApiClient(apiClient);
     this.alerts = new AlertsApiClient(apiClient);
     this.dashboards = new DashboardsApiClient(apiClient);
     this.downtimes = new DowntimesApiClient(apiClient);
