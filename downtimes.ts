@@ -23,13 +23,13 @@ type BaseDowntimeRecurrence = {
   until: Date | undefined;
 };
 
-type CommonDowntimeReccurence =
+export type CommonDowntimeReccurence =
   & BaseDowntimeRecurrence
   & Readonly<{
     type: "hourly" | "daily" | "monthly" | "yearly";
   }>;
 
-type WeeklyDowntimeReccurence =
+export type WeeklyDowntimeReccurence =
   & BaseDowntimeRecurrence
   & Readonly<{
     type: "weekly";
@@ -80,13 +80,13 @@ type BaseCreateDowntimeInputRecurrence = Readonly<{
   until?: Date | undefined;
 }>;
 
-type CommonCreateDowntimeInputRecurrence =
+export type CommonCreateDowntimeInputRecurrence =
   & BaseCreateDowntimeInputRecurrence
   & Readonly<{
     type: "hourly" | "daily" | "monthly" | "yearly";
   }>;
 
-type WeeklyCreateDowntimeInputRecurrence =
+export type WeeklyCreateDowntimeInputRecurrence =
   & BaseCreateDowntimeInputRecurrence
   & Readonly<{
     type: "weekly";
