@@ -67,9 +67,9 @@ export type ExternalMonitor = BaseMonitor & {
   type: "external";
   serviceName: string | undefined;
   request: {
-    url: URL;
+    url: string;
     method: ExternalMonitorHttpMethod;
-    headers: Headers;
+    headers: ExternalMonitorHeader[];
     body: string;
     followRedirects: boolean;
     skipCertificateVerification: boolean;
@@ -122,6 +122,11 @@ export type MonitorOperator = ">" | "<";
 export type ConnectivityMonitorAlertStatus = "CRITICAL" | "WARNING";
 
 export type ExternalMonitorHttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+
+export type ExternalMonitorHeader = {
+  name: string;
+  value: string;
+};
 
 export type AnomalyDetectionMonitorSensitivity =
   | "insensitive"
@@ -202,8 +207,12 @@ export type CreateExternalMonitorInput =
     request: Readonly<{
       url: string | URL;
       method?: ExternalMonitorHttpMethod | undefined;
-      /** `{ name: value }` or `Headers` object */
-      headers?: { readonly [name: string]: string } | Headers | undefined;
+      /** `[ { name, value } ]`, `{ name: value }` or `Headers` object */
+      headers?:
+        | readonly CreateExternalMonitorInputHeader[]
+        | { readonly [name: string]: string }
+        | Headers
+        | undefined;
       body?: string | undefined;
       followRedirects?: boolean | undefined;
       skipCertificateVerification?: boolean | undefined;
@@ -258,6 +267,11 @@ export type CreateQueryMonitorInput =
       critical?: number | undefined;
     }>;
   }>;
+
+type CreateExternalMonitorInputHeader = Readonly<{
+  name: string;
+  value: string;
+}>;
 
 export class MonitorsApiClient {
   private api: ApiClient;
@@ -478,9 +492,9 @@ function fromRawMonitor(raw: RawMonitor): Monitor {
         type: "external",
         serviceName: raw.service ?? undefined,
         request: {
-          url: new URL(raw.url),
+          url: raw.url,
           method: raw.method,
-          headers: new Headers(raw.headers.map(({ name, value }) => [name, value])),
+          headers: raw.headers,
           body: raw.requestBody ?? "",
           followRedirects: raw.followRedirect ?? false,
           skipCertificateVerification: raw.skipCertificateVerification ?? false,
@@ -702,6 +716,8 @@ function toRawCreateMonitorInput(
         method: input.request.method,
         headers: input.request.headers instanceof Headers
           ? [...input.request.headers].map(([name, value]) => ({ name, value }))
+          : Array.isArray(input.request.headers)
+          ? input.request.headers
           : input.request.headers
           ? Object.entries(input.request.headers).map(([name, value]) => ({ name, value }))
           : undefined,
