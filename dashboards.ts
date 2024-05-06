@@ -465,7 +465,7 @@ type RawDashboardAlertStatusWidget =
   & RawBaseDashboardWidget
   & {
     type: "alertStatus";
-    roleFullname: string | null;
+    roleFullname?: string | null | undefined;
   };
 
 type RawDashboardWidgetLayout = {
