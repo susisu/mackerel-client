@@ -1,19 +1,26 @@
 import type { ApiClient, ApiOptions } from "./api.ts";
+import type { Extends } from "./types.ts";
+import { assertType } from "./types.ts";
+
+assertType<Extends<DataPoint, PostMetricsInputDataPoint>>(true);
 
 export type DataPoint = {
   time: Date;
   value: number;
 };
 
+export type PostMetricsInputMetrics = {
+  readonly [metricName: string]: readonly PostMetricsInputDataPoint[];
+};
+
 export type PostMetricsInputDataPoint = Readonly<{
-  name: string;
   time: Date;
   value: number;
 }>;
 
 export type BulkPostHostMetricsInputDataPoint = Readonly<{
   hostId: string;
-  name: string;
+  metricName: string;
   time: Date;
   value: number;
 }>;
@@ -45,7 +52,7 @@ export class MetricsApiClient {
         signal: options?.signal,
       },
     );
-    return res.metrics.map((dp) => fromRawDataPoint(dp));
+    return res.metrics.map((dataPoint) => fromRawDataPoint(dataPoint));
   }
 
   async getServiceMetrics(
@@ -68,7 +75,7 @@ export class MetricsApiClient {
         signal: options?.signal,
       },
     );
-    return res.metrics.map((dp) => fromRawDataPoint(dp));
+    return res.metrics.map((dataPoint) => fromRawDataPoint(dataPoint));
   }
 
   /**
@@ -111,8 +118,8 @@ export class MetricsApiClient {
         hostId,
         Object.fromEntries(
           Object.entries(metrics).map((
-            [metricName, dp],
-          ) => [metricName, fromRawDataPoint(dp)]),
+            [metricName, dataPoint],
+          ) => [metricName, fromRawDataPoint(dataPoint)]),
         ),
       ]),
     );
@@ -120,7 +127,7 @@ export class MetricsApiClient {
 
   async postHostMetrics(
     hostId: string,
-    dataPoints: readonly PostMetricsInputDataPoint[],
+    metrics: PostMetricsInputMetrics,
     options?: ApiOptions,
   ): Promise<void> {
     type RawInput = ReadonlyArray<
@@ -135,12 +142,14 @@ export class MetricsApiClient {
       "POST",
       "/api/v0/tsdb",
       {
-        body: dataPoints.map((dp) => ({
-          hostId,
-          name: dp.name,
-          time: Math.floor(dp.time.getTime() / 1000),
-          value: dp.value,
-        })),
+        body: Object.entries(metrics).flatMap(([metricName, dataPoints]) =>
+          dataPoints.map((dataPoint) => ({
+            hostId,
+            name: metricName,
+            time: Math.floor(dataPoint.time.getTime() / 1000),
+            value: dataPoint.value,
+          }))
+        ),
         signal: options?.signal,
       },
     );
@@ -162,11 +171,11 @@ export class MetricsApiClient {
       "POST",
       "/api/v0/tsdb",
       {
-        body: dataPoints.map((dp) => ({
-          hostId: dp.hostId,
-          name: dp.name,
-          time: Math.floor(dp.time.getTime() / 1000),
-          value: dp.value,
+        body: dataPoints.map((dataPoint) => ({
+          hostId: dataPoint.hostId,
+          name: dataPoint.metricName,
+          time: Math.floor(dataPoint.time.getTime() / 1000),
+          value: dataPoint.value,
         })),
         signal: options?.signal,
       },
@@ -175,7 +184,7 @@ export class MetricsApiClient {
 
   async postServiceMetrics(
     serviceName: string,
-    dataPoints: readonly PostMetricsInputDataPoint[],
+    metrics: PostMetricsInputMetrics,
     options?: ApiOptions,
   ): Promise<void> {
     type RawInput = ReadonlyArray<
@@ -189,11 +198,13 @@ export class MetricsApiClient {
       "POST",
       `/api/v0/services/${serviceName}/tsdb`,
       {
-        body: dataPoints.map((dp) => ({
-          name: dp.name,
-          time: Math.floor(dp.time.getTime() / 1000),
-          value: dp.value,
-        })),
+        body: Object.entries(metrics).flatMap(([metricName, dataPoints]) =>
+          dataPoints.map((dataPoint) => ({
+            name: metricName,
+            time: Math.floor(dataPoint.time.getTime() / 1000),
+            value: dataPoint.value,
+          }))
+        ),
         signal: options?.signal,
       },
     );
