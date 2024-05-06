@@ -4,6 +4,7 @@ import { ApiClient } from "./api.ts";
 
 import { AlertGroupSettingsApiClient } from "./alertGroupSettings.ts";
 import { AlertsApiClient } from "./alerts.ts";
+import { AwsIntegrationsApiClient } from "./awsIntegrations.ts";
 import { ChannelsApiClient } from "./channels.ts";
 import { DashboardsApiClient } from "./dashboards.ts";
 import { DowntimesApiClient } from "./downtimes.ts";
@@ -23,6 +24,7 @@ export type MackerelClientOptions = Options<{
 export class MackerelClient {
   readonly alertGroupSettings: AlertGroupSettingsApiClient;
   readonly alerts: AlertsApiClient;
+  readonly awsIntegrations: AwsIntegrationsApiClient;
   readonly channels: ChannelsApiClient;
   readonly dashboards: DashboardsApiClient;
   readonly downtimes: DowntimesApiClient;
@@ -41,6 +43,7 @@ export class MackerelClient {
     });
     this.alertGroupSettings = new AlertGroupSettingsApiClient(apiClient);
     this.alerts = new AlertsApiClient(apiClient);
+    this.awsIntegrations = new AwsIntegrationsApiClient(apiClient);
     this.channels = new ChannelsApiClient(apiClient);
     this.dashboards = new DashboardsApiClient(apiClient);
     this.downtimes = new DowntimesApiClient(apiClient);

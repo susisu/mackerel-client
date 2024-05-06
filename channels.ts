@@ -2,9 +2,12 @@ import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
 import type { ApiClient, ApiOptions } from "./api.ts";
 
-assertType<Extends<Extract<Channel, { type: CreateChannelInput["type"] }>, CreateChannelInput>>(
-  true,
-);
+assertType<
+  Extends<
+    Extract<Channel, { type: CreateChannelInput["type"] }>,
+    CreateChannelInput
+  >
+>(true);
 assertType<Extends<NotificationGroup, CreateNotificationGroupInput>>(true);
 
 export type Channel = CommonChannel | EmailChannel | SlackChannel | WebhookChannel;
