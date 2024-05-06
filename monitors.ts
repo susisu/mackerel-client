@@ -1,6 +1,7 @@
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
 import type { ApiClient, ApiOptions } from "./api.ts";
+import type { AlertStatus } from "./alerts.ts";
 
 assertType<Extends<Monitor, CreateMonitorInput>>(true);
 
@@ -273,6 +274,21 @@ type CreateExternalMonitorInputHeader = Readonly<{
   value: string;
 }>;
 
+export type CheckMonitoringReport = Readonly<{
+  name: string;
+  source: CheckMonitoringReportSource;
+  status: AlertStatus;
+  message: string;
+  occurredAt: Date;
+  maxAttempts?: number | undefined;
+  notificationIntervalMinutes?: number | undefined;
+}>;
+
+export type CheckMonitoringReportSource = Readonly<{
+  type: "host";
+  hostId: string;
+}>;
+
 export class MonitorsApiClient {
   private api: ApiClient;
 
@@ -336,6 +352,42 @@ export class MonitorsApiClient {
       },
     );
     return fromRawMonitor(res);
+  }
+
+  async postCheckMonitoringReports(
+    reports: readonly CheckMonitoringReport[],
+    options?: ApiOptions,
+  ): Promise<void> {
+    type RawInput = Readonly<{
+      reports: readonly RawReport[];
+    }>;
+    type RawReport = Readonly<{
+      name: string;
+      source: CheckMonitoringReportSource;
+      status: AlertStatus;
+      message: string;
+      occurredAt: number;
+      maxCheckAttempts?: number | undefined;
+      notificationInterval?: number | undefined;
+    }>;
+    await this.api.fetch<unknown, RawInput>(
+      "POST",
+      "/api/v0/monitoring/checks/report",
+      {
+        body: {
+          reports: reports.map((report) => ({
+            name: report.name,
+            source: report.source,
+            status: report.status,
+            message: report.message,
+            occurredAt: Math.floor(report.occurredAt.getTime() / 1000),
+            maxCheckAttempts: report.maxAttempts,
+            notificationInterval: report.notificationIntervalMinutes,
+          })),
+        },
+        signal: options?.signal,
+      },
+    );
   }
 }
 
