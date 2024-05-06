@@ -108,8 +108,8 @@ export type AnomalyDetectionMonitor = BaseMonitor & {
 
 export type QueryMonitor = BaseMonitor & {
   type: "query";
-  queryName: string;
   query: string;
+  legend: string;
   conditions: Readonly<{
     operator: MonitorOperator;
     warning: number | undefined;
@@ -259,8 +259,8 @@ export type CreateQueryMonitorInput =
   & BaseCreateMonitorInput
   & Readonly<{
     type: "query";
-    queryName: string;
     query: string;
+    legend: string;
     conditions: Readonly<{
       operator: MonitorOperator;
       warning?: number | undefined;
@@ -538,8 +538,8 @@ function fromRawMonitor(raw: RawMonitor): Monitor {
       return {
         ...base,
         type: "query",
-        queryName: raw.legend,
         query: raw.query,
+        legend: raw.legend,
         conditions: {
           operator: raw.operator,
           warning: raw.warning ?? undefined,
@@ -763,8 +763,8 @@ function toRawCreateMonitorInput(
       return {
         ...base,
         type: "query",
-        legend: input.queryName,
         query: input.query,
+        legend: input.legend,
         operator: input.conditions.operator,
         warning: input.conditions.warning,
         critical: input.conditions.critical,
