@@ -1,3 +1,4 @@
+import { defaultErrorHandler } from "https://crux.land/api/get/2KNRVU.ts";
 import type { Options } from "./types.ts";
 
 export type FetcherOptions = Options<{
@@ -68,6 +69,36 @@ export class DefaultFetcher implements Fetcher {
 
     const json = await res.json();
     return json as Output;
+  }
+}
+
+// deno-lint-ignore no-explicit-any
+export type MockFetcherHandler<Output = any, Input = any> = (
+  options?: FetchOptions<Input>,
+) => Output | Promise<Output>;
+
+export class MockFetcher implements Fetcher {
+  private handlers: Map<string, MockFetcherHandler>;
+
+  constructor() {
+    this.handlers = new Map();
+  }
+
+  mock(method: FetchMethod, path: string, handler: MockFetcherHandler): this {
+    this.handlers.set(`${method} ${path}`, handler);
+    return this;
+  }
+
+  async fetch<Output = unknown, Input = unknown>(
+    method: FetchMethod,
+    path: string,
+    options?: FetchOptions<Input>,
+  ): Promise<Output> {
+    const handler = this.handlers.get(`${method} ${path}`);
+    if (!handler) {
+      throw new Error(`${method} ${path} is not mocked`);
+    }
+    return await handler(options);
   }
 }
 
