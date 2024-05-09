@@ -29,7 +29,7 @@ export type Invitation = {
 
 export type InvitationAuthority = Exclude<UserAuthority, "owner">;
 
-export type InviteInput = Readonly<{
+export type SendInvitationInput = Readonly<{
   email: string;
   authority: InvitationAuthority;
 }>;
@@ -71,11 +71,11 @@ export class UsersApiClient {
     return res.invitations.map((invitation) => fromRawInvitation(invitation));
   }
 
-  async invite(
-    input: InviteInput,
+  async sendInvitation(
+    input: SendInvitationInput,
     options?: ApiOptions,
   ): Promise<Invitation> {
-    const res = await this.fetcher.fetch<RawInvitation, InviteInput>(
+    const res = await this.fetcher.fetch<RawInvitation, SendInvitationInput>(
       "POST",
       "/api/v0/invitations",
       {
