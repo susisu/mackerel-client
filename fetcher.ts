@@ -7,7 +7,7 @@ export type FetcherOptions = Options<{
 
 export type FetchMethod = "GET" | "POST" | "PUT" | "DELETE";
 
-export type FetchOptions<Input> = Options<{
+export type FetchOptions<Input = unknown> = Options<{
   params: URLSearchParams;
   body: Input;
   signal: AbortSignal;
