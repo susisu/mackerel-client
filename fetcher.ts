@@ -1,4 +1,3 @@
-import { defaultErrorHandler } from "https://crux.land/api/get/2KNRVU.ts";
 import type { Options } from "./types.ts";
 
 export type FetcherOptions = Options<{
