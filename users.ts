@@ -50,7 +50,7 @@ export class UsersApiClient {
     return res.users.map((user) => fromRawUser(user));
   }
 
-  async kick(userId: string, options?: ApiOptions): Promise<User> {
+  async remove(userId: string, options?: ApiOptions): Promise<User> {
     const res = await this.fetcher.fetch<RawUser>(
       "DELETE",
       `/api/v0/users/${userId}`,
