@@ -13,7 +13,7 @@
   },
   "exports": {
     ".": "./mod.ts",
-    "./api": "./api.ts",
+    "./fetcher": "./fetcher.ts",
     "./alertGroupSettings": "./alertGroupSettings.ts",
     "./alerts": "./alerts.ts",
     "./awsIntegrations": "./awsIntegrations.ts",

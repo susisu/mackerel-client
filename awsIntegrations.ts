@@ -1,6 +1,6 @@
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 assertType<
   Extends<
@@ -196,14 +196,14 @@ export type UpdateAwsIntegrationInput = Readonly<{
 }>;
 
 export class AwsIntegrationsApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async list(options?: ApiOptions): Promise<AwsIntegration[]> {
-    const res = await this.api.fetch<{ aws_integrations: RawAwsIntegration[] }>(
+    const res = await this.fetcher.fetch<{ aws_integrations: RawAwsIntegration[] }>(
       "GET",
       "/api/v0/aws-integrations",
       { signal: options?.signal },
@@ -212,7 +212,7 @@ export class AwsIntegrationsApiClient {
   }
 
   async get(integrationId: string, options?: ApiOptions): Promise<AwsIntegration> {
-    const res = await this.api.fetch<RawAwsIntegration>(
+    const res = await this.fetcher.fetch<RawAwsIntegration>(
       "GET",
       `/api/v0/aws-integrations/${integrationId}`,
       { signal: options?.signal },
@@ -221,7 +221,7 @@ export class AwsIntegrationsApiClient {
   }
 
   async create(input: CreateAwsIntegrationInput, options?: ApiOptions): Promise<AwsIntegration> {
-    const res = await this.api.fetch<RawAwsIntegration, RawCreateAwsIntegrationInput>(
+    const res = await this.fetcher.fetch<RawAwsIntegration, RawCreateAwsIntegrationInput>(
       "POST",
       "/api/v0/aws-integrations",
       {
@@ -237,7 +237,7 @@ export class AwsIntegrationsApiClient {
     input: UpdateAwsIntegrationInput,
     options?: ApiOptions,
   ): Promise<AwsIntegration> {
-    const res = await this.api.fetch<RawAwsIntegration, RawCreateAwsIntegrationInput>(
+    const res = await this.fetcher.fetch<RawAwsIntegration, RawCreateAwsIntegrationInput>(
       "PUT",
       `/api/v0/aws-integrations/${integrationId}`,
       {
@@ -249,7 +249,7 @@ export class AwsIntegrationsApiClient {
   }
 
   async delete(integrationId: string, options?: ApiOptions): Promise<AwsIntegration> {
-    const res = await this.api.fetch<RawAwsIntegration>(
+    const res = await this.fetcher.fetch<RawAwsIntegration>(
       "DELETE",
       `/api/v0/aws-integrations/${integrationId}`,
       {
@@ -261,7 +261,7 @@ export class AwsIntegrationsApiClient {
   }
 
   async createExternalId(options?: ApiOptions): Promise<string> {
-    const res = await this.api.fetch<{ externalId: string }>(
+    const res = await this.fetcher.fetch<{ externalId: string }>(
       "POST",
       "/api/v0/aws-integrations-external-id",
       { signal: options?.signal },
@@ -270,7 +270,7 @@ export class AwsIntegrationsApiClient {
   }
 
   async listMetricNames(options?: ApiOptions): Promise<{ [K in AwsServiceType]: string[] }> {
-    const res = await this.api.fetch<{ [K in AwsServiceType]: string[] }>(
+    const res = await this.fetcher.fetch<{ [K in AwsServiceType]: string[] }>(
       "GET",
       "/api/v0/aws-integrations-excludable-metrics",
       { signal: options?.signal },

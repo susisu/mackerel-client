@@ -1,6 +1,6 @@
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 assertType<Extends<AlertGroupSetting, CreateAlertGroupSettingInput>>(true);
 
@@ -30,14 +30,14 @@ export type CreateAlertGroupSettingInput = Readonly<{
 }>;
 
 export class AlertGroupSettingsApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async list(options?: ApiOptions): Promise<AlertGroupSetting[]> {
-    const res = await this.api.fetch<{ alertGroupSettings: RawAlertGroupSetting[] }>(
+    const res = await this.fetcher.fetch<{ alertGroupSettings: RawAlertGroupSetting[] }>(
       "GET",
       "/api/v0/alert-group-settings",
       { signal: options?.signal },
@@ -46,7 +46,7 @@ export class AlertGroupSettingsApiClient {
   }
 
   async get(settingId: string, options?: ApiOptions): Promise<AlertGroupSetting> {
-    const res = await this.api.fetch<RawAlertGroupSetting>(
+    const res = await this.fetcher.fetch<RawAlertGroupSetting>(
       "GET",
       `/api/v0/alert-group-settings/${settingId}`,
       { signal: options?.signal },
@@ -58,7 +58,7 @@ export class AlertGroupSettingsApiClient {
     input: CreateAlertGroupSettingInput,
     options?: ApiOptions,
   ): Promise<AlertGroupSetting> {
-    const res = await this.api.fetch<RawAlertGroupSetting, RawCreateAlertGroupSettingInput>(
+    const res = await this.fetcher.fetch<RawAlertGroupSetting, RawCreateAlertGroupSettingInput>(
       "POST",
       "/api/v0/alert-group-settings",
       {
@@ -74,7 +74,7 @@ export class AlertGroupSettingsApiClient {
     input: CreateAlertGroupSettingInput,
     options?: ApiOptions,
   ): Promise<AlertGroupSetting> {
-    const res = await this.api.fetch<RawAlertGroupSetting, RawCreateAlertGroupSettingInput>(
+    const res = await this.fetcher.fetch<RawAlertGroupSetting, RawCreateAlertGroupSettingInput>(
       "PUT",
       `/api/v0/alert-group-settings/${settingId}`,
       {
@@ -86,7 +86,7 @@ export class AlertGroupSettingsApiClient {
   }
 
   async delete(settingId: string, options?: ApiOptions): Promise<AlertGroupSetting> {
-    const res = await this.api.fetch<RawAlertGroupSetting>(
+    const res = await this.fetcher.fetch<RawAlertGroupSetting>(
       "DELETE",
       `/api/v0/alert-group-settings/${settingId}`,
       {

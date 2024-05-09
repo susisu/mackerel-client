@@ -1,4 +1,4 @@
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 export type Org = {
   name: string;
@@ -6,10 +6,10 @@ export type Org = {
 };
 
 export class OrgApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async get(options?: ApiOptions): Promise<Org> {
@@ -17,7 +17,7 @@ export class OrgApiClient {
       name: string;
       displayName?: string | null | undefined;
     };
-    const res = await this.api.fetch<RawOrg>(
+    const res = await this.fetcher.fetch<RawOrg>(
       "GET",
       "/api/v0/org",
       { signal: options?.signal },

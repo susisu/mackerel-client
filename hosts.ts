@@ -1,6 +1,6 @@
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 import type { AlertStatus } from "./alerts.ts";
 
 assertType<Extends<Host, CreateHostInput>>(true);
@@ -74,10 +74,10 @@ export type HostMonitoredStatusDetail = {
 };
 
 export class HostsApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async list(
@@ -109,7 +109,7 @@ export class HostsApiClient {
         params.append("status", status);
       }
     }
-    const res = await this.api.fetch<{ hosts: RawHost[] }>(
+    const res = await this.fetcher.fetch<{ hosts: RawHost[] }>(
       "GET",
       "/api/v0/hosts",
       {
@@ -124,7 +124,7 @@ export class HostsApiClient {
     hostId: string,
     options?: ApiOptions,
   ): Promise<Host> {
-    const res = await this.api.fetch<{ host: RawHost }>(
+    const res = await this.fetcher.fetch<{ host: RawHost }>(
       "GET",
       `/api/v0/hosts/${hostId}`,
       { signal: options?.signal },
@@ -142,7 +142,7 @@ export class HostsApiClient {
     if (options?.caseInsensitive) {
       params.set("caseInsensitive", "true");
     }
-    const res = await this.api.fetch<{ host: RawHost }>(
+    const res = await this.fetcher.fetch<{ host: RawHost }>(
       "GET",
       `/api/v0/hosts-by-custom-identifier/${customIdentifier}`,
       {
@@ -157,7 +157,7 @@ export class HostsApiClient {
     input: CreateHostInput,
     options?: ApiOptions,
   ): Promise<{ id: string }> {
-    const res = await this.api.fetch<{ id: string }, RawCreateHostInput>(
+    const res = await this.fetcher.fetch<{ id: string }, RawCreateHostInput>(
       "POST",
       "/api/v0/hosts",
       {
@@ -173,7 +173,7 @@ export class HostsApiClient {
     input: CreateHostInput,
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<unknown, RawCreateHostInput>(
+    await this.fetcher.fetch<unknown, RawCreateHostInput>(
       "PUT",
       `/api/v0/hosts/${hostId}`,
       {
@@ -188,7 +188,7 @@ export class HostsApiClient {
     status: HostStatus,
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<unknown, Readonly<{ status: HostStatus }>>(
+    await this.fetcher.fetch<unknown, Readonly<{ status: HostStatus }>>(
       "POST",
       `/api/v0/hosts/${hostId}/status`,
       {
@@ -203,7 +203,7 @@ export class HostsApiClient {
     status: HostStatus,
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<
+    await this.fetcher.fetch<
       unknown,
       Readonly<{
         ids: readonly string[];
@@ -227,7 +227,7 @@ export class HostsApiClient {
     roleFullnames: readonly string[],
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<unknown, Readonly<{ roleFullnames: readonly string[] }>>(
+    await this.fetcher.fetch<unknown, Readonly<{ roleFullnames: readonly string[] }>>(
       "PUT",
       `/api/v0/hosts/${hostId}/role-fullnames`,
       {
@@ -241,7 +241,7 @@ export class HostsApiClient {
     hostId: string,
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<unknown>(
+    await this.fetcher.fetch<unknown>(
       "POST",
       `/api/v0/hosts/${hostId}/retire`,
       {
@@ -255,7 +255,7 @@ export class HostsApiClient {
     hostIds: readonly string[],
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<unknown, Readonly<{ ids: readonly string[] }>>(
+    await this.fetcher.fetch<unknown, Readonly<{ ids: readonly string[] }>>(
       "POST",
       "/api/v0/hosts/bulk-retire",
       {
@@ -269,7 +269,7 @@ export class HostsApiClient {
     hostId: string,
     options?: ApiOptions,
   ): Promise<string[]> {
-    const res = await this.api.fetch<{ names: string[] }>(
+    const res = await this.fetcher.fetch<{ names: string[] }>(
       "GET",
       `/api/v0/hosts/${hostId}/metric-names`,
       { signal: options?.signal },
@@ -291,7 +291,7 @@ export class HostsApiClient {
       message: string;
       memo?: string | null | undefined;
     };
-    const res = await this.api.fetch<{ monitoredStatuses: RawHostMonitoredStatus[] }>(
+    const res = await this.fetcher.fetch<{ monitoredStatuses: RawHostMonitoredStatus[] }>(
       "GET",
       `/api/v0/hosts/${hostId}/monitored-statuses`,
       { signal: options?.signal },
@@ -316,7 +316,7 @@ export class HostsApiClient {
     type RawMetadata = {
       namespace: string;
     };
-    const res = await this.api.fetch<{ metadata: RawMetadata[] }>(
+    const res = await this.fetcher.fetch<{ metadata: RawMetadata[] }>(
       "GET",
       `/api/v0/hosts/${hostId}/metadata`,
       { signal: options?.signal },
@@ -329,7 +329,7 @@ export class HostsApiClient {
     namespace: string,
     options?: ApiOptions,
   ): Promise<T> {
-    const res = await this.api.fetch<T>(
+    const res = await this.fetcher.fetch<T>(
       "GET",
       `/api/v0/hosts/${hostId}/metadata/${namespace}`,
       { signal: options?.signal },
@@ -343,7 +343,7 @@ export class HostsApiClient {
     metadata: T,
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<unknown, T>(
+    await this.fetcher.fetch<unknown, T>(
       "PUT",
       `/api/v0/hosts/${hostId}/metadata/${namespace}`,
       {
@@ -358,7 +358,7 @@ export class HostsApiClient {
     namespace: string,
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch(
+    await this.fetcher.fetch(
       "DELETE",
       `/api/v0/hosts/${hostId}/metadata/${namespace}`,
       {

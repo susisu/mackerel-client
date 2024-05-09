@@ -1,6 +1,6 @@
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 assertType<
   Extends<
@@ -153,14 +153,14 @@ export type CreateNotificationGroupInputScopeMonitor = Readonly<{
 }>;
 
 export class ChannelsApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async list(options?: ApiOptions): Promise<Channel[]> {
-    const res = await this.api.fetch<{ channels: RawChannel[] }>(
+    const res = await this.fetcher.fetch<{ channels: RawChannel[] }>(
       "GET",
       "/api/v0/channels",
       { signal: options?.signal },
@@ -169,7 +169,7 @@ export class ChannelsApiClient {
   }
 
   async create(input: CreateChannelInput, options?: ApiOptions): Promise<Channel> {
-    const res = await this.api.fetch<RawChannel, RawCreateChannelInput>(
+    const res = await this.fetcher.fetch<RawChannel, RawCreateChannelInput>(
       "POST",
       "/api/v0/channels",
       {
@@ -181,7 +181,7 @@ export class ChannelsApiClient {
   }
 
   async delete(channelId: string, options?: ApiOptions): Promise<Channel> {
-    const res = await this.api.fetch<RawChannel>(
+    const res = await this.fetcher.fetch<RawChannel>(
       "DELETE",
       `/api/v0/channels/${channelId}`,
       {
@@ -193,7 +193,7 @@ export class ChannelsApiClient {
   }
 
   async listNotificationGroups(options?: ApiOptions): Promise<NotificationGroup[]> {
-    const res = await this.api.fetch<{ notificationGroups: RawNotificationGroup[] }>(
+    const res = await this.fetcher.fetch<{ notificationGroups: RawNotificationGroup[] }>(
       "GET",
       "/api/v0/notification-groups",
       { signal: options?.signal },
@@ -205,7 +205,7 @@ export class ChannelsApiClient {
     input: CreateNotificationGroupInput,
     options?: ApiOptions,
   ): Promise<NotificationGroup> {
-    const res = await this.api.fetch<RawNotificationGroup, RawCreateNotificationGroupInput>(
+    const res = await this.fetcher.fetch<RawNotificationGroup, RawCreateNotificationGroupInput>(
       "POST",
       "/api/v0/notification-groups",
       {
@@ -221,7 +221,7 @@ export class ChannelsApiClient {
     input: CreateNotificationGroupInput,
     options?: ApiOptions,
   ): Promise<NotificationGroup> {
-    const res = await this.api.fetch<RawNotificationGroup, RawCreateNotificationGroupInput>(
+    const res = await this.fetcher.fetch<RawNotificationGroup, RawCreateNotificationGroupInput>(
       "PUT",
       `/api/v0/notification-groups/${groupId}`,
       {
@@ -236,7 +236,7 @@ export class ChannelsApiClient {
     groupId: string,
     options?: ApiOptions,
   ): Promise<NotificationGroup> {
-    const res = await this.api.fetch<RawNotificationGroup>(
+    const res = await this.fetcher.fetch<RawNotificationGroup>(
       "DELETE",
       `/api/v0/notification-groups/${groupId}`,
       {

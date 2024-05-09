@@ -1,6 +1,6 @@
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 assertType<Extends<Dashboard, CreateDashboardInput>>(true);
 
@@ -348,14 +348,14 @@ export type CreateDashboardInputValueWidgetFormatRule = Readonly<{
 }>;
 
 export class DashboardsApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async list(options?: ApiOptions): Promise<Dashboard[]> {
-    const res = await this.api.fetch<{ dashboards: RawDashboard[] }>(
+    const res = await this.fetcher.fetch<{ dashboards: RawDashboard[] }>(
       "GET",
       "/api/v0/dashboards",
       { signal: options?.signal },
@@ -364,7 +364,7 @@ export class DashboardsApiClient {
   }
 
   async get(dashboardId: string, options?: ApiOptions): Promise<Dashboard> {
-    const res = await this.api.fetch<RawDashboard>(
+    const res = await this.fetcher.fetch<RawDashboard>(
       "GET",
       `/api/v0/dashboards/${dashboardId}`,
       { signal: options?.signal },
@@ -373,7 +373,7 @@ export class DashboardsApiClient {
   }
 
   async create(input: CreateDashboardInput, options?: ApiOptions): Promise<Dashboard> {
-    const res = await this.api.fetch<RawDashboard, RawCreateDashboardInput>(
+    const res = await this.fetcher.fetch<RawDashboard, RawCreateDashboardInput>(
       "POST",
       "/api/v0/dashboards",
       {
@@ -389,7 +389,7 @@ export class DashboardsApiClient {
     input: CreateDashboardInput,
     options?: ApiOptions,
   ): Promise<Dashboard> {
-    const res = await this.api.fetch<RawDashboard, RawCreateDashboardInput>(
+    const res = await this.fetcher.fetch<RawDashboard, RawCreateDashboardInput>(
       "PUT",
       `/api/v0/dashboards/${dashboardId}`,
       {
@@ -401,7 +401,7 @@ export class DashboardsApiClient {
   }
 
   async delete(dashboardId: string, options?: ApiOptions): Promise<Dashboard> {
-    const res = await this.api.fetch<RawDashboard>(
+    const res = await this.fetcher.fetch<RawDashboard>(
       "DELETE",
       `/api/v0/dashboards/${dashboardId}`,
       {

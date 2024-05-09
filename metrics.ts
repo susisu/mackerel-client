@@ -1,6 +1,6 @@
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 assertType<Extends<DataPoint, PostMetricsInputDataPoint>>(true);
 
@@ -26,10 +26,10 @@ export type BulkPostHostMetricsInputDataPoint = Readonly<{
 }>;
 
 export class MetricsApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async getHostMetrics(
@@ -44,7 +44,7 @@ export class MetricsApiClient {
       from: Math.floor(from.getTime() / 1000).toString(),
       to: Math.floor(to.getTime() / 1000).toString(),
     });
-    const res = await this.api.fetch<{ metrics: RawDataPoint[] }>(
+    const res = await this.fetcher.fetch<{ metrics: RawDataPoint[] }>(
       "GET",
       `/api/v0/hosts/${hostId}/metrics`,
       {
@@ -67,7 +67,7 @@ export class MetricsApiClient {
       from: Math.floor(from.getTime() / 1000).toString(),
       to: Math.floor(to.getTime() / 1000).toString(),
     });
-    const res = await this.api.fetch<{ metrics: RawDataPoint[] }>(
+    const res = await this.fetcher.fetch<{ metrics: RawDataPoint[] }>(
       "GET",
       `/api/v0/services/${serviceName}/metrics`,
       {
@@ -97,7 +97,7 @@ export class MetricsApiClient {
     for (const metricName of metricNames) {
       params.append("name", metricName);
     }
-    const res = await this.api.fetch<{
+    const res = await this.fetcher.fetch<{
       tsdbLatest: {
         [hostId: string]: {
           [metricName: string]: RawDataPoint;
@@ -138,7 +138,7 @@ export class MetricsApiClient {
         value: number;
       }>
     >;
-    await this.api.fetch<unknown, RawInput>(
+    await this.fetcher.fetch<unknown, RawInput>(
       "POST",
       "/api/v0/tsdb",
       {
@@ -167,7 +167,7 @@ export class MetricsApiClient {
         value: number;
       }>
     >;
-    await this.api.fetch<unknown, RawInput>(
+    await this.fetcher.fetch<unknown, RawInput>(
       "POST",
       "/api/v0/tsdb",
       {
@@ -194,7 +194,7 @@ export class MetricsApiClient {
         value: number;
       }>
     >;
-    await this.api.fetch<unknown, RawInput>(
+    await this.fetcher.fetch<unknown, RawInput>(
       "POST",
       `/api/v0/services/${serviceName}/tsdb`,
       {

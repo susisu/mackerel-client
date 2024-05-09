@@ -1,6 +1,6 @@
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 assertType<Extends<Downtime, CreateDowntimeInput>>(true);
 
@@ -109,14 +109,14 @@ export type CreateDowntimeInputScopes = Readonly<{
 }>;
 
 export class DowntimesApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async list(options?: ApiOptions): Promise<Downtime[]> {
-    const res = await this.api.fetch<{ downtimes: RawDowntime[] }>(
+    const res = await this.fetcher.fetch<{ downtimes: RawDowntime[] }>(
       "GET",
       "/api/v0/downtimes",
       { signal: options?.signal },
@@ -128,7 +128,7 @@ export class DowntimesApiClient {
     input: CreateDowntimeInput,
     options?: ApiOptions,
   ): Promise<Downtime> {
-    const res = await this.api.fetch<RawDowntime, RawCreateDowntimeInput>(
+    const res = await this.fetcher.fetch<RawDowntime, RawCreateDowntimeInput>(
       "POST",
       "/api/v0/downtimes",
       {
@@ -144,7 +144,7 @@ export class DowntimesApiClient {
     input: CreateDowntimeInput,
     options?: ApiOptions,
   ): Promise<Downtime> {
-    const res = await this.api.fetch<RawDowntime, RawCreateDowntimeInput>(
+    const res = await this.fetcher.fetch<RawDowntime, RawCreateDowntimeInput>(
       "PUT",
       `/api/v0/downtimes/${downtimeId}`,
       {
@@ -159,7 +159,7 @@ export class DowntimesApiClient {
     downtimeId: string,
     options?: ApiOptions,
   ): Promise<Downtime> {
-    const res = await this.api.fetch<RawDowntime>(
+    const res = await this.fetcher.fetch<RawDowntime>(
       "DELETE",
       `/api/v0/downtimes/${downtimeId}`,
       {

@@ -1,4 +1,4 @@
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 export type Alert =
   | ConnectivityAlert
@@ -80,10 +80,10 @@ export type UpdateAlertInput = Readonly<{
 }>;
 
 export class AlertsApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async list(
@@ -106,7 +106,7 @@ export class AlertsApiClient {
     if (options?.cursor !== undefined) {
       params.set("nextId", options.cursor);
     }
-    const res = await this.api.fetch<{
+    const res = await this.fetcher.fetch<{
       alerts: RawAlert[];
       nextId?: string | null | undefined;
     }>(
@@ -124,7 +124,7 @@ export class AlertsApiClient {
   }
 
   async get(alertId: string, options?: ApiOptions): Promise<Alert> {
-    const res = await this.api.fetch<RawAlert>(
+    const res = await this.fetcher.fetch<RawAlert>(
       "GET",
       `/api/v0/alerts/${alertId}`,
       { signal: options?.signal },
@@ -137,7 +137,7 @@ export class AlertsApiClient {
     input: UpdateAlertInput,
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<unknown, UpdateAlertInput>(
+    await this.fetcher.fetch<unknown, UpdateAlertInput>(
       "PUT",
       `/api/v0/alerts/${alertId}`,
       {
@@ -152,7 +152,7 @@ export class AlertsApiClient {
     reason: string,
     options?: ApiOptions,
   ): Promise<Alert> {
-    const res = await this.api.fetch<RawAlert, Readonly<{ reason: string }>>(
+    const res = await this.fetcher.fetch<RawAlert, Readonly<{ reason: string }>>(
       "POST",
       `/api/v0/alerts/${alertId}/close`,
       {

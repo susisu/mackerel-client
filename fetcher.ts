@@ -1,6 +1,6 @@
 import type { Options } from "./types.ts";
 
-export type ApiClientOptions = Options<{
+export type FetcherOptions = Options<{
   base: string | URL;
 }>;
 
@@ -12,14 +12,19 @@ export type FetchOptions<Input> = Options<{
   signal: AbortSignal;
 }>;
 
-// deno-lint-ignore ban-types
-export type ApiOptions<T = {}> = Options<{ [K in keyof T]: T[K] } & { signal: AbortSignal }>;
+export interface Fetcher {
+  fetch<Output = unknown, Input = unknown>(
+    method: FetchMethod,
+    path: string,
+    options?: FetchOptions<Input>,
+  ): Promise<Output>;
+}
 
-export class ApiClient {
+export class DefaultFetcher implements Fetcher {
   private key: string;
   private base: URL;
 
-  constructor(key: string, options?: ApiClientOptions) {
+  constructor(key: string, options?: FetcherOptions) {
     this.key = key;
     this.base = new URL(options?.base ?? "https://api.mackerelio.com/");
   }
@@ -65,3 +70,6 @@ export class ApiClient {
     return json as Output;
   }
 }
+
+// deno-lint-ignore ban-types
+export type ApiOptions<T = {}> = Options<{ [K in keyof T]: T[K] } & { signal: AbortSignal }>;

@@ -1,6 +1,6 @@
 import type { Options } from "./types.ts";
 
-import { ApiClient } from "./api.ts";
+import { DefaultFetcher } from "./fetcher.ts";
 
 import { AlertGroupSettingsApiClient } from "./alertGroupSettings.ts";
 import { AlertsApiClient } from "./alerts.ts";
@@ -38,22 +38,22 @@ export class MackerelClient {
   readonly users: UsersApiClient;
 
   constructor(apiKey: string, options?: MackerelClientOptions) {
-    const apiClient = new ApiClient(apiKey, {
+    const fetcher = new DefaultFetcher(apiKey, {
       base: options?.apiBase,
     });
-    this.alertGroupSettings = new AlertGroupSettingsApiClient(apiClient);
-    this.alerts = new AlertsApiClient(apiClient);
-    this.awsIntegrations = new AwsIntegrationsApiClient(apiClient);
-    this.channels = new ChannelsApiClient(apiClient);
-    this.dashboards = new DashboardsApiClient(apiClient);
-    this.downtimes = new DowntimesApiClient(apiClient);
-    this.graphAnnotations = new GraphAnnotationsApiClient(apiClient);
-    this.graphDefs = new GraphDefsApiClient(apiClient);
-    this.hosts = new HostsApiClient(apiClient);
-    this.metrics = new MetricsApiClient(apiClient);
-    this.monitors = new MonitorsApiClient(apiClient);
-    this.org = new OrgApiClient(apiClient);
-    this.services = new ServicesApiClient(apiClient);
-    this.users = new UsersApiClient(apiClient);
+    this.alertGroupSettings = new AlertGroupSettingsApiClient(fetcher);
+    this.alerts = new AlertsApiClient(fetcher);
+    this.awsIntegrations = new AwsIntegrationsApiClient(fetcher);
+    this.channels = new ChannelsApiClient(fetcher);
+    this.dashboards = new DashboardsApiClient(fetcher);
+    this.downtimes = new DowntimesApiClient(fetcher);
+    this.graphAnnotations = new GraphAnnotationsApiClient(fetcher);
+    this.graphDefs = new GraphDefsApiClient(fetcher);
+    this.hosts = new HostsApiClient(fetcher);
+    this.metrics = new MetricsApiClient(fetcher);
+    this.monitors = new MonitorsApiClient(fetcher);
+    this.org = new OrgApiClient(fetcher);
+    this.services = new ServicesApiClient(fetcher);
+    this.users = new UsersApiClient(fetcher);
   }
 }

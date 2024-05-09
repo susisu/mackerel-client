@@ -1,6 +1,6 @@
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 assertType<Extends<Service, CreateServiceInput>>(true);
 assertType<Extends<Role, CreateRoleInput>>(true);
@@ -27,16 +27,16 @@ export type CreateRoleInput = Readonly<{
 }>;
 
 export class ServicesApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async list(
     options?: ApiOptions,
   ): Promise<Service[]> {
-    const res = await this.api.fetch<{ services: Service[] }>(
+    const res = await this.fetcher.fetch<{ services: Service[] }>(
       "GET",
       "/api/v0/services",
       { signal: options?.signal },
@@ -52,7 +52,7 @@ export class ServicesApiClient {
       name: string;
       memo: string;
     }>;
-    const res = await this.api.fetch<Service, RawInput>(
+    const res = await this.fetcher.fetch<Service, RawInput>(
       "POST",
       "/api/v0/services",
       {
@@ -70,7 +70,7 @@ export class ServicesApiClient {
     serviceName: string,
     options?: ApiOptions,
   ): Promise<Service> {
-    const res = await this.api.fetch<Service>(
+    const res = await this.fetcher.fetch<Service>(
       "DELETE",
       `/api/v0/services/${serviceName}`,
       {
@@ -85,7 +85,7 @@ export class ServicesApiClient {
     serviceName: string,
     options?: ApiOptions,
   ): Promise<Role[]> {
-    const res = await this.api.fetch<{ roles: Role[] }>(
+    const res = await this.fetcher.fetch<{ roles: Role[] }>(
       "GET",
       `/api/v0/services/${serviceName}/roles`,
       { signal: options?.signal },
@@ -102,7 +102,7 @@ export class ServicesApiClient {
       name: string;
       memo: string;
     }>;
-    const res = await this.api.fetch<Role, RawInput>(
+    const res = await this.fetcher.fetch<Role, RawInput>(
       "POST",
       `/api/v0/services/${serviceName}/roles`,
       {
@@ -121,7 +121,7 @@ export class ServicesApiClient {
     roleName: string,
     options?: ApiOptions,
   ): Promise<Role> {
-    const res = await this.api.fetch<Role>(
+    const res = await this.fetcher.fetch<Role>(
       "DELETE",
       `/api/v0/services/${serviceName}/roles/${roleName}`,
       {
@@ -136,7 +136,7 @@ export class ServicesApiClient {
     serviceName: string,
     options?: ApiOptions,
   ): Promise<string[]> {
-    const res = await this.api.fetch<{ names: string[] }>(
+    const res = await this.fetcher.fetch<{ names: string[] }>(
       "GET",
       `/api/v0/services/${serviceName}/metric-names`,
       { signal: options?.signal },
@@ -151,7 +151,7 @@ export class ServicesApiClient {
     type RawMetadata = {
       namespace: string;
     };
-    const res = await this.api.fetch<{ metadata: RawMetadata[] }>(
+    const res = await this.fetcher.fetch<{ metadata: RawMetadata[] }>(
       "GET",
       `/api/v0/services/${serviceName}/metadata`,
       { signal: options?.signal },
@@ -164,7 +164,7 @@ export class ServicesApiClient {
     namespace: string,
     options?: ApiOptions,
   ): Promise<T> {
-    const res = await this.api.fetch<T>(
+    const res = await this.fetcher.fetch<T>(
       "GET",
       `/api/v0/services/${serviceName}/metadata/${namespace}`,
       { signal: options?.signal },
@@ -178,7 +178,7 @@ export class ServicesApiClient {
     metadata: T,
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<unknown, T>(
+    await this.fetcher.fetch<unknown, T>(
       "PUT",
       `/api/v0/services/${serviceName}/metadata/${namespace}`,
       {
@@ -193,7 +193,7 @@ export class ServicesApiClient {
     namespace: string,
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch(
+    await this.fetcher.fetch(
       "DELETE",
       `/api/v0/services/${serviceName}/metadata/${namespace}`,
       {
@@ -211,7 +211,7 @@ export class ServicesApiClient {
     type RawMetadata = {
       namespace: string;
     };
-    const res = await this.api.fetch<{ metadata: RawMetadata[] }>(
+    const res = await this.fetcher.fetch<{ metadata: RawMetadata[] }>(
       "GET",
       `/api/v0/services/${serviceName}/roles/${roleName}/metadata`,
       { signal: options?.signal },
@@ -225,7 +225,7 @@ export class ServicesApiClient {
     namespace: string,
     options?: ApiOptions,
   ): Promise<T> {
-    const res = await this.api.fetch<T>(
+    const res = await this.fetcher.fetch<T>(
       "GET",
       `/api/v0/services/${serviceName}/roles/${roleName}/metadata/${namespace}`,
       { signal: options?.signal },
@@ -240,7 +240,7 @@ export class ServicesApiClient {
     metadata: T,
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<unknown, T>(
+    await this.fetcher.fetch<unknown, T>(
       "PUT",
       `/api/v0/services/${serviceName}/roles/${roleName}/metadata/${namespace}`,
       {
@@ -256,7 +256,7 @@ export class ServicesApiClient {
     namespace: string,
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch(
+    await this.fetcher.fetch(
       "DELETE",
       `/api/v0/services/${serviceName}/roles/${roleName}/metadata/${namespace}`,
       {

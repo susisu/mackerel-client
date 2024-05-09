@@ -1,4 +1,4 @@
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 export type CreateHostGraphDefsInputGraphDef = Readonly<{
   name: string;
@@ -25,17 +25,17 @@ export type GraphDefUnit =
   | "iops";
 
 export class GraphDefsApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async createHostGraphDefs(
     graphDefs: readonly CreateHostGraphDefsInputGraphDef[],
     options?: ApiOptions,
   ): Promise<void> {
-    await this.api.fetch<unknown, readonly CreateHostGraphDefsInputGraphDef[]>(
+    await this.fetcher.fetch<unknown, readonly CreateHostGraphDefsInputGraphDef[]>(
       "POST",
       "/api/v0/graph-defs/create",
       {

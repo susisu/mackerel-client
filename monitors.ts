@@ -1,6 +1,6 @@
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 import type { AlertStatus } from "./alerts.ts";
 
 assertType<Extends<Monitor, CreateMonitorInput>>(true);
@@ -290,14 +290,14 @@ export type CheckMonitoringReportSource = Readonly<{
 }>;
 
 export class MonitorsApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async list(options?: ApiOptions): Promise<Monitor[]> {
-    const res = await this.api.fetch<{ monitors: RawMonitor[] }>(
+    const res = await this.fetcher.fetch<{ monitors: RawMonitor[] }>(
       "GET",
       "/api/v0/monitors/",
       { signal: options?.signal },
@@ -306,7 +306,7 @@ export class MonitorsApiClient {
   }
 
   async get(monitorId: string, options?: ApiOptions): Promise<Monitor> {
-    const res = await this.api.fetch<RawMonitor>(
+    const res = await this.fetcher.fetch<RawMonitor>(
       "GET",
       `/api/v0/monitors/${monitorId}`,
       { signal: options?.signal },
@@ -315,7 +315,7 @@ export class MonitorsApiClient {
   }
 
   async create(input: CreateMonitorInput, options?: ApiOptions): Promise<Monitor> {
-    const res = await this.api.fetch<RawMonitor, RawCreateMonitorInput>(
+    const res = await this.fetcher.fetch<RawMonitor, RawCreateMonitorInput>(
       "POST",
       "/api/v0/monitors",
       {
@@ -331,7 +331,7 @@ export class MonitorsApiClient {
     input: CreateMonitorInput,
     options?: ApiOptions,
   ): Promise<Monitor> {
-    const res = await this.api.fetch<RawMonitor, RawCreateMonitorInput>(
+    const res = await this.fetcher.fetch<RawMonitor, RawCreateMonitorInput>(
       "PUT",
       `/api/v0/monitors/${monitorId}`,
       {
@@ -343,7 +343,7 @@ export class MonitorsApiClient {
   }
 
   async delete(monitorId: string, options?: ApiOptions): Promise<Monitor> {
-    const res = await this.api.fetch<RawMonitor>(
+    const res = await this.fetcher.fetch<RawMonitor>(
       "DELETE",
       `/api/v0/monitors/${monitorId}`,
       {
@@ -370,7 +370,7 @@ export class MonitorsApiClient {
       maxCheckAttempts?: number | undefined;
       notificationInterval?: number | undefined;
     }>;
-    await this.api.fetch<unknown, RawInput>(
+    await this.fetcher.fetch<unknown, RawInput>(
       "POST",
       "/api/v0/monitoring/checks/report",
       {

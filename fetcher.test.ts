@@ -2,9 +2,9 @@ import { assertEquals, assertRejects } from "@std/assert";
 import { afterAll, afterEach, beforeAll, describe, it } from "@std/testing/bdd";
 import { assertSpyCalls, spy } from "@std/testing/mock";
 import * as mf from "mock_fetch";
-import { ApiClient } from "./api.ts";
+import { DefaultFetcher } from "./fetcher.ts";
 
-describe("ApiClient", () => {
+describe("DefaultFetcher", () => {
   beforeAll(() => {
     mf.install();
   });
@@ -22,8 +22,8 @@ describe("ApiClient", () => {
       const handler = spy((_req: Request) => new Response(JSON.stringify({ id: 42 })));
       mf.mock("GET@/api/v0/dummy", handler);
 
-      const client = new ApiClient("deadbeef");
-      const res = await client.fetch("GET", "/api/v0/dummy");
+      const fetcher = new DefaultFetcher("deadbeef");
+      const res = await fetcher.fetch("GET", "/api/v0/dummy");
 
       assertSpyCalls(handler, 1);
       const req = handler.calls[0].args[0];
@@ -39,8 +39,8 @@ describe("ApiClient", () => {
       const handler = spy((_req: Request) => new Response(JSON.stringify({ id: 42 })));
       mf.mock("GET@/api/v0/dummy", handler);
 
-      const client = new ApiClient("deadbeef");
-      const res = await client.fetch("GET", "/api/v0/dummy", {
+      const fetcher = new DefaultFetcher("deadbeef");
+      const res = await fetcher.fetch("GET", "/api/v0/dummy", {
         params: new URLSearchParams({ foo: "bar" }),
       });
 
@@ -58,8 +58,8 @@ describe("ApiClient", () => {
       const handler = spy((_req: Request) => new Response(JSON.stringify({ id: 42 })));
       mf.mock("POST@/api/v0/dummy", handler);
 
-      const client = new ApiClient("deadbeef");
-      const res = await client.fetch("POST", "/api/v0/dummy", {
+      const fetcher = new DefaultFetcher("deadbeef");
+      const res = await fetcher.fetch("POST", "/api/v0/dummy", {
         body: { foo: "bar" },
       });
 
@@ -78,10 +78,10 @@ describe("ApiClient", () => {
       const handler = spy((_req: Request) => new Response(JSON.stringify({ id: 42 })));
       mf.mock("GET@/api/v0/dummy", handler);
 
-      const client = new ApiClient("deadbeef", {
+      const fetcher = new DefaultFetcher("deadbeef", {
         base: "https://foo.example/",
       });
-      const res = await client.fetch("GET", "/api/v0/dummy");
+      const res = await fetcher.fetch("GET", "/api/v0/dummy");
 
       assertSpyCalls(handler, 1);
       const req = handler.calls[0].args[0];
@@ -101,10 +101,10 @@ describe("ApiClient", () => {
       );
       mf.mock("GET@/api/v0/dummy", handler);
 
-      const client = new ApiClient("deadbeef");
+      const fetcher = new DefaultFetcher("deadbeef");
 
       await assertRejects(
-        () => client.fetch("GET", "/api/v0/dummy"),
+        () => fetcher.fetch("GET", "/api/v0/dummy"),
         Error,
         "Failed to fetch GET /api/v0/dummy",
       );

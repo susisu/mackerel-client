@@ -1,4 +1,4 @@
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 export type User = {
   id: string;
@@ -35,14 +35,14 @@ export type InviteInput = Readonly<{
 }>;
 
 export class UsersApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async list(options?: ApiOptions): Promise<User[]> {
-    const res = await this.api.fetch<{ users: RawUser[] }>(
+    const res = await this.fetcher.fetch<{ users: RawUser[] }>(
       "GET",
       "/api/v0/users",
       { signal: options?.signal },
@@ -51,7 +51,7 @@ export class UsersApiClient {
   }
 
   async kick(userId: string, options?: ApiOptions): Promise<User> {
-    const res = await this.api.fetch<RawUser>(
+    const res = await this.fetcher.fetch<RawUser>(
       "DELETE",
       `/api/v0/users/${userId}`,
       {
@@ -63,7 +63,7 @@ export class UsersApiClient {
   }
 
   async listInvitations(options?: ApiOptions): Promise<Invitation[]> {
-    const res = await this.api.fetch<{ invitations: RawInvitation[] }>(
+    const res = await this.fetcher.fetch<{ invitations: RawInvitation[] }>(
       "GET",
       "/api/v0/invitations",
       { signal: options?.signal },
@@ -75,7 +75,7 @@ export class UsersApiClient {
     input: InviteInput,
     options?: ApiOptions,
   ): Promise<Invitation> {
-    const res = await this.api.fetch<RawInvitation, InviteInput>(
+    const res = await this.fetcher.fetch<RawInvitation, InviteInput>(
       "POST",
       "/api/v0/invitations",
       {
@@ -90,7 +90,7 @@ export class UsersApiClient {
   }
 
   async revokeInvitation(email: string, options?: ApiOptions): Promise<void> {
-    await this.api.fetch<unknown, Readonly<{ email: string }>>(
+    await this.fetcher.fetch<unknown, Readonly<{ email: string }>>(
       "POST",
       "/api/v0/invitations/revoke",
       {

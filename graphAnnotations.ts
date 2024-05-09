@@ -1,6 +1,6 @@
 import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
-import type { ApiClient, ApiOptions } from "./api.ts";
+import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 assertType<Extends<GraphAnnotation, CreateGraphAnnotationInput>>(true);
 
@@ -24,10 +24,10 @@ export type CreateGraphAnnotationInput = Readonly<{
 }>;
 
 export class GraphAnnotationsApiClient {
-  private api: ApiClient;
+  private fetcher: Fetcher;
 
-  constructor(api: ApiClient) {
-    this.api = api;
+  constructor(fetcher: Fetcher) {
+    this.fetcher = fetcher;
   }
 
   async list(
@@ -41,7 +41,7 @@ export class GraphAnnotationsApiClient {
       from: Math.floor(from.getTime() / 1000).toString(),
       to: Math.floor(to.getTime() / 1000).toString(),
     });
-    const res = await this.api.fetch<{ graphAnnotations: RawGraphAnnotation[] }>(
+    const res = await this.fetcher.fetch<{ graphAnnotations: RawGraphAnnotation[] }>(
       "GET",
       "/api/v0/graph-annotations",
       {
@@ -56,7 +56,7 @@ export class GraphAnnotationsApiClient {
     input: CreateGraphAnnotationInput,
     options?: ApiOptions,
   ): Promise<GraphAnnotation> {
-    const res = await this.api.fetch<RawGraphAnnotation, RawCreateGraphAnnnotationInput>(
+    const res = await this.fetcher.fetch<RawGraphAnnotation, RawCreateGraphAnnnotationInput>(
       "POST",
       "/api/v0/graph-annotations",
       {
@@ -72,7 +72,7 @@ export class GraphAnnotationsApiClient {
     input: CreateGraphAnnotationInput,
     options?: ApiOptions,
   ): Promise<GraphAnnotation> {
-    const res = await this.api.fetch<RawGraphAnnotation, RawCreateGraphAnnnotationInput>(
+    const res = await this.fetcher.fetch<RawGraphAnnotation, RawCreateGraphAnnnotationInput>(
       "PUT",
       `/api/v0/graph-annotations/${annotationId}`,
       {
@@ -87,7 +87,7 @@ export class GraphAnnotationsApiClient {
     annotationId: string,
     options?: ApiOptions,
   ): Promise<GraphAnnotation> {
-    const res = await this.api.fetch<RawGraphAnnotation>(
+    const res = await this.fetcher.fetch<RawGraphAnnotation>(
       "DELETE",
       `/api/v0/graph-annotations/${annotationId}`,
       {
