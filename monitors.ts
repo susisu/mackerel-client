@@ -211,7 +211,6 @@ export type CreateExternalMonitorInput =
       /** `[ { name, value } ]`, `{ name: value }` or `Headers` object */
       headers?:
         | readonly CreateExternalMonitorInputHeader[]
-        | { readonly [name: string]: string }
         | Headers
         | undefined;
       body?: string | undefined;
@@ -768,10 +767,8 @@ function toRawCreateMonitorInput(
         method: input.request.method,
         headers: input.request.headers instanceof Headers
           ? [...input.request.headers].map(([name, value]) => ({ name, value }))
-          : Array.isArray(input.request.headers)
-          ? input.request.headers
           : input.request.headers
-          ? Object.entries(input.request.headers).map(([name, value]) => ({ name, value }))
+          ? input.request.headers
           : undefined,
         requestBody: input.request.body,
         // defaults to true as the web console does
