@@ -98,10 +98,10 @@ export class HostsApiClient {
       }
     }
     if (options?.name !== undefined) {
-      params.append("role", options.name);
+      params.append("name", options.name);
     }
     if (options?.customIdentifier !== undefined) {
-      params.append("role", options.customIdentifier);
+      params.append("customIdentifier", options.customIdentifier);
     }
     if (options?.statuses) {
       for (const status of options.statuses) {
