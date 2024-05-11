@@ -82,17 +82,13 @@ export class MetricsApiClient {
   }
 
   /**
-   * @returns `{ hostId: { metricName: dataPoint } }`
+   * @returns `Map<hostId, Map<metricName, DataPoint>>`
    */
   async getLatestHostMetricDataPoints(
     hostIds: readonly string[],
     metricNames: readonly string[],
     options?: ApiOptions,
-  ): Promise<{
-    [hostId: string]: {
-      [metricName: string]: DataPoint;
-    };
-  }> {
+  ): Promise<Map<string, Map<string, DataPoint>>> {
     const params = new URLSearchParams();
     for (const hostId of hostIds) {
       params.append("hostId", hostId);
@@ -100,13 +96,14 @@ export class MetricsApiClient {
     for (const metricName of metricNames) {
       params.append("name", metricName);
     }
-    const res = await this.fetcher.fetch<{
+    type RawOutput = {
       tsdbLatest: {
         [hostId: string]: {
           [metricName: string]: RawDataPoint;
         };
       };
-    }>(
+    };
+    const res = await this.fetcher.fetch<RawOutput>(
       "GET",
       "/api/v0/tsdb/latest",
       {
@@ -114,15 +111,14 @@ export class MetricsApiClient {
         signal: options?.signal,
       },
     );
-    return Object.fromEntries(
-      Object.entries(res.tsdbLatest).map((
-        [hostId, metrics],
-      ) => [
+    return new Map(
+      Object.entries(res.tsdbLatest).map(([hostId, metrics]) => [
         hostId,
-        Object.fromEntries(
-          Object.entries(metrics).map((
-            [metricName, dataPoint],
-          ) => [metricName, fromRawDataPoint(dataPoint)]),
+        new Map(
+          Object.entries(metrics).map(([metricName, dataPoint]) => [
+            metricName,
+            fromRawDataPoint(dataPoint),
+          ]),
         ),
       ]),
     );
