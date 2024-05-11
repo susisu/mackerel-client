@@ -306,7 +306,7 @@ export class MonitorsApiClient {
   async list(options?: ApiOptions): Promise<Monitor[]> {
     const res = await this.fetcher.fetch<{ monitors: RawMonitor[] }>(
       "GET",
-      "/api/v0/monitors/",
+      "/api/v0/monitors",
       { signal: options?.signal },
     );
     return res.monitors.map((monitor) => fromRawMonitor(monitor));
