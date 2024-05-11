@@ -37,7 +37,7 @@ export class MetricsApiClient {
     this.fetcher = fetcher;
   }
 
-  async getHostMetrics(
+  async getHostMetricDataPoints(
     hostId: string,
     metricName: string,
     range: TimeRange,
@@ -59,7 +59,7 @@ export class MetricsApiClient {
     return res.metrics.map((dataPoint) => fromRawDataPoint(dataPoint));
   }
 
-  async getServiceMetrics(
+  async getServiceMetricDataPoints(
     serviceName: string,
     metricName: string,
     range: TimeRange,
@@ -84,7 +84,7 @@ export class MetricsApiClient {
   /**
    * @returns `{ hostId: { metricName: dataPoint } }`
    */
-  async getLatestHostMetricValues(
+  async getLatestHostMetricDataPoints(
     hostIds: readonly string[],
     metricNames: readonly string[],
     options?: ApiOptions,
