@@ -117,10 +117,10 @@ export class ServicesApiClient {
   }
 
   async deleteRole(
-    serviceName: string,
-    roleName: string,
+    roleFullname: string,
     options?: ApiOptions,
   ): Promise<Role> {
+    const [serviceName, roleName] = parseRoleFullname(roleFullname);
     const res = await this.fetcher.fetch<Role>(
       "DELETE",
       `/api/v0/services/${serviceName}/roles/${roleName}`,
@@ -204,10 +204,10 @@ export class ServicesApiClient {
   }
 
   async listRoleMetadataNamespaces(
-    serviceName: string,
-    roleName: string,
+    roleFullname: string,
     options?: ApiOptions,
   ): Promise<string[]> {
+    const [serviceName, roleName] = parseRoleFullname(roleFullname);
     type RawMetadata = {
       namespace: string;
     };
@@ -220,11 +220,11 @@ export class ServicesApiClient {
   }
 
   async getRoleMetadata<T = unknown>(
-    serviceName: string,
-    roleName: string,
+    roleFullname: string,
     namespace: string,
     options?: ApiOptions,
   ): Promise<T> {
+    const [serviceName, roleName] = parseRoleFullname(roleFullname);
     const res = await this.fetcher.fetch<T>(
       "GET",
       `/api/v0/services/${serviceName}/roles/${roleName}/metadata/${namespace}`,
@@ -234,12 +234,12 @@ export class ServicesApiClient {
   }
 
   async putRoleMetadata<T = unknown>(
-    serviceName: string,
-    roleName: string,
+    roleFullname: string,
     namespace: string,
     metadata: T,
     options?: ApiOptions,
   ): Promise<void> {
+    const [serviceName, roleName] = parseRoleFullname(roleFullname);
     await this.fetcher.fetch<unknown, T>(
       "PUT",
       `/api/v0/services/${serviceName}/roles/${roleName}/metadata/${namespace}`,
@@ -251,11 +251,11 @@ export class ServicesApiClient {
   }
 
   async deleteRoleMetadata(
-    serviceName: string,
-    roleName: string,
+    roleFullname: string,
     namespace: string,
     options?: ApiOptions,
   ): Promise<void> {
+    const [serviceName, roleName] = parseRoleFullname(roleFullname);
     await this.fetcher.fetch(
       "DELETE",
       `/api/v0/services/${serviceName}/roles/${roleName}/metadata/${namespace}`,
@@ -265,4 +265,13 @@ export class ServicesApiClient {
       },
     );
   }
+}
+
+export function parseRoleFullname(roleFullname: string): [serviceName: string, roleName: string] {
+  const [serviceName, roleName] = roleFullname.split(/:\s*/);
+  return [serviceName, roleName];
+}
+
+export function makeRoleFullname(serviceName: string, roleName: string): string {
+  return `${serviceName}:${roleName}`;
 }

@@ -3,7 +3,7 @@ import { describe, it } from "@std/testing/bdd";
 import { assertSpyCalls, spy } from "@std/testing/mock";
 import type { FetchOptions } from "./fetcher.ts";
 import { MockFetcher } from "./fetcher.ts";
-import { ServicesApiClient } from "./services.ts";
+import { makeRoleFullname, parseRoleFullname, ServicesApiClient } from "./services.ts";
 
 describe("ServicesApiClient", () => {
   describe("#list", () => {
@@ -175,7 +175,7 @@ describe("ServicesApiClient", () => {
         .mock("DELETE", "/api/v0/services/foo/roles/xxx", handler);
       const cli = new ServicesApiClient(fetcher);
 
-      const role = await cli.deleteRole("foo", "xxx");
+      const role = await cli.deleteRole("foo:xxx");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -282,7 +282,7 @@ describe("ServicesApiClient", () => {
         .mock("GET", "/api/v0/services/foo/roles/xxx/metadata", handler);
       const cli = new ServicesApiClient(fetcher);
 
-      const namespaces = await cli.listRoleMetadataNamespaces("foo", "xxx");
+      const namespaces = await cli.listRoleMetadataNamespaces("foo:xxx");
 
       assertSpyCalls(handler, 1);
 
@@ -297,7 +297,7 @@ describe("ServicesApiClient", () => {
         .mock("GET", "/api/v0/services/foo/roles/xxx/metadata/abc", handler);
       const cli = new ServicesApiClient(fetcher);
 
-      const metadata = await cli.getRoleMetadata("foo", "xxx", "abc");
+      const metadata = await cli.getRoleMetadata("foo:xxx", "abc");
 
       assertSpyCalls(handler, 1);
 
@@ -312,7 +312,7 @@ describe("ServicesApiClient", () => {
         .mock("PUT", "/api/v0/services/foo/roles/xxx/metadata/abc", handler);
       const cli = new ServicesApiClient(fetcher);
 
-      await cli.putRoleMetadata("foo", "xxx", "abc", { test: 42 });
+      await cli.putRoleMetadata("foo:xxx", "abc", { test: 42 });
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -327,11 +327,24 @@ describe("ServicesApiClient", () => {
         .mock("DELETE", "/api/v0/services/foo/roles/xxx/metadata/abc", handler);
       const cli = new ServicesApiClient(fetcher);
 
-      await cli.deleteRoleMetadata("foo", "xxx", "abc");
+      await cli.deleteRoleMetadata("foo:xxx", "abc");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
       assertEquals(body, {});
     });
+  });
+});
+
+describe("parseRoleFullname", () => {
+  it("parses a role fullname", () => {
+    assertEquals(parseRoleFullname("foo:bar"), ["foo", "bar"]);
+    assertEquals(parseRoleFullname("baz: qux"), ["baz", "qux"]);
+  });
+});
+
+describe("makeRoleFullname", () => {
+  it("makes a role fullname", () => {
+    assertEquals(makeRoleFullname("foo", "bar"), "foo:bar");
   });
 });
