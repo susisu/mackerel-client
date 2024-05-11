@@ -26,9 +26,9 @@ export type ConnectivityMonitor = BaseMonitor & {
   type: "connectivity";
   scopes: {
     /** included service names or role fullnames */
-    include: string[] | undefined;
+    include: string[];
     /** excluded service names or role fullnames */
-    exclude: string[] | undefined;
+    exclude: string[];
   };
   alertStatus: ConnectivityMonitorAlertStatus;
 };
@@ -38,9 +38,9 @@ export type HostMonitor = BaseMonitor & {
   metricName: string;
   scopes: {
     /** included service names or role fullnames */
-    include: string[] | undefined;
+    include: string[];
     /** excluded service names or role fullnames */
-    exclude: string[] | undefined;
+    exclude: string[];
   };
   conditions: {
     operator: MonitorOperator;
@@ -505,8 +505,8 @@ function fromRawMonitor(raw: RawMonitor): Monitor {
         ...base,
         type: "connectivity",
         scopes: {
-          include: raw.scopes.length === 0 ? undefined : raw.scopes,
-          exclude: raw.excludeScopes.length === 0 ? undefined : raw.excludeScopes,
+          include: raw.scopes,
+          exclude: raw.excludeScopes,
         },
         alertStatus: raw.alertStatusOnGone,
       };
@@ -516,8 +516,8 @@ function fromRawMonitor(raw: RawMonitor): Monitor {
         type: "host",
         metricName: raw.metric,
         scopes: {
-          include: raw.scopes.length === 0 ? undefined : raw.scopes,
-          exclude: raw.excludeScopes.length === 0 ? undefined : raw.excludeScopes,
+          include: raw.scopes,
+          exclude: raw.excludeScopes,
         },
         conditions: {
           operator: raw.operator,

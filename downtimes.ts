@@ -50,21 +50,21 @@ export type DowntimeRecurrenceWeekday =
 export type DowntimeScopes = {
   services: {
     /** included service names */
-    include: string[] | undefined;
+    include: string[];
     /** excluded service names */
-    exclude: string[] | undefined;
+    exclude: string[];
   };
   roles: {
     /** included role fullnames */
-    include: string[] | undefined;
+    include: string[];
     /** excluded role fullnames */
-    exclude: string[] | undefined;
+    exclude: string[];
   };
   monitors: {
     /** included monitor ids */
-    include: string[] | undefined;
+    include: string[];
     /** excluded monitor ids */
-    exclude: string[] | undefined;
+    exclude: string[];
   };
 };
 
@@ -260,16 +260,16 @@ function fromRawDowntime(raw: RawDowntime): Downtime {
       : undefined,
     scopes: {
       services: {
-        include: raw.serviceScopes ?? undefined,
-        exclude: raw.serviceExcludeScopes ?? undefined,
+        include: raw.serviceScopes ?? [],
+        exclude: raw.serviceExcludeScopes ?? [],
       },
       roles: {
-        include: raw.roleScopes ?? undefined,
-        exclude: raw.roleExcludeScopes ?? undefined,
+        include: raw.roleScopes ?? [],
+        exclude: raw.roleExcludeScopes ?? [],
       },
       monitors: {
-        include: raw.monitorScopes ?? undefined,
-        exclude: raw.monitorExcludeScopes ?? undefined,
+        include: raw.monitorScopes ?? [],
+        exclude: raw.monitorExcludeScopes ?? [],
       },
     },
   };

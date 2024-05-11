@@ -50,9 +50,9 @@ describe("AlertGroupSettingsApiClient", () => {
           name: "my alert group 2",
           memo: "",
           scopes: {
-            services: undefined,
-            roles: undefined,
-            monitors: undefined,
+            services: [],
+            roles: [],
+            monitors: [],
           },
           notificationIntervalMinutes: undefined,
         },

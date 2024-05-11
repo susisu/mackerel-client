@@ -10,11 +10,11 @@ export type AlertGroupSetting = {
   memo: string;
   scopes: {
     /** service names */
-    services: string[] | undefined;
+    services: string[];
     /** role fullnames */
-    roles: string[] | undefined;
+    roles: string[];
     /** monitor ids */
-    monitors: string[] | undefined;
+    monitors: string[];
   };
   notificationIntervalMinutes: number | undefined;
 };
@@ -120,9 +120,9 @@ function fromRawAlertGroupSetting(raw: RawAlertGroupSetting): AlertGroupSetting 
     name: raw.name,
     memo: raw.memo ?? "",
     scopes: {
-      services: raw.serviceScopes && raw.serviceScopes.length > 0 ? raw.serviceScopes : undefined,
-      roles: raw.roleScopes && raw.roleScopes.length > 0 ? raw.roleScopes : undefined,
-      monitors: raw.monitorScopes && raw.monitorScopes.length > 0 ? raw.monitorScopes : undefined,
+      services: raw.serviceScopes ?? [],
+      roles: raw.roleScopes ?? [],
+      monitors: raw.monitorScopes ?? [],
     },
     notificationIntervalMinutes: raw.notificationInterval ?? undefined,
   };
