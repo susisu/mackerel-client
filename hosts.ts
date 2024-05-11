@@ -2,6 +2,7 @@ import type { Extends } from "./types.ts";
 import { assertType } from "./types.ts";
 import type { ApiOptions, Fetcher } from "./fetcher.ts";
 import type { AlertStatus } from "./alerts.ts";
+import { makeRoleFullname } from "./services.ts";
 
 assertType<Extends<Host, CreateHostInput>>(true);
 
@@ -18,8 +19,7 @@ export type Host = {
   isRetired: boolean;
   retiredAt: Date | undefined;
   interfaces: Interface[];
-  /** `{ serviceName: [roleName] }` */
-  roles: { [serviceName: string]: string[] };
+  roleFullnames: string[];
 };
 
 export type Interface = {
@@ -42,8 +42,7 @@ export type CreateHostInput = Readonly<{
   memo?: string | undefined;
   meta?: object | undefined;
   interfaces?: readonly CreateHostInputInterface[] | undefined;
-  /** `{ serviceName: [roleName] }` */
-  roles?: { readonly [serviceName: string]: readonly string[] } | undefined;
+  roleFullnames?: readonly string[] | undefined;
   checks?: readonly CreateHostInputCheckMonitor[] | undefined;
 }>;
 
@@ -415,7 +414,9 @@ function fromRawHost(raw: RawHost): Host {
       ipAddress: iface.ipAddress ?? undefined,
       ipv6Address: iface.ipv6Address ?? undefined,
     })),
-    roles: raw.roles,
+    roleFullnames: Object.entries(raw.roles).flatMap(([serviceName, roleNames]) =>
+      roleNames.map((roleName) => makeRoleFullname(serviceName, roleName))
+    ),
   };
 }
 
@@ -438,11 +439,7 @@ function toRawCreateHostInput(input: CreateHostInput): RawCreateHostInput {
     memo: input.memo,
     meta: input.meta ?? {},
     interfaces: input.interfaces,
-    roleFullnames: input.roles
-      ? Object.entries(input.roles).flatMap(([serviceName, roleNames]) =>
-        roleNames.map((roleName) => `${serviceName}:${roleName}`)
-      )
-      : undefined,
+    roleFullnames: input.roleFullnames,
     checks: input.checks,
   };
 }
