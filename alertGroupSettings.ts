@@ -9,8 +9,11 @@ export type AlertGroupSetting = {
   name: string;
   memo: string;
   scopes: {
+    /** service names */
     services: string[] | undefined;
+    /** role fullnames */
     roles: string[] | undefined;
+    /** monitor ids */
     monitors: string[] | undefined;
   };
   notificationIntervalMinutes: number | undefined;
@@ -21,8 +24,11 @@ export type CreateAlertGroupSettingInput = Readonly<{
   memo?: string | undefined;
   scopes?:
     | Readonly<{
+      /** service names */
       services?: readonly string[] | undefined;
+      /** role fullnames */
       roles?: readonly string[] | undefined;
+      /** monitor ids */
       monitors?: readonly string[] | undefined;
     }>
     | undefined;

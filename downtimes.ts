@@ -49,15 +49,21 @@ export type DowntimeRecurrenceWeekday =
 
 export type DowntimeScopes = {
   services: {
+    /** included service names */
     include: string[] | undefined;
+    /** excluded service names */
     exclude: string[] | undefined;
   };
   roles: {
+    /** included role fullnames */
     include: string[] | undefined;
+    /** excluded role fullnames */
     exclude: string[] | undefined;
   };
   monitors: {
+    /** included monitor ids */
     include: string[] | undefined;
+    /** excluded monitor ids */
     exclude: string[] | undefined;
   };
 };
@@ -95,15 +101,21 @@ export type WeeklyCreateDowntimeInputRecurrence =
 
 export type CreateDowntimeInputScopes = Readonly<{
   services?: Readonly<{
+    /** included service names */
     include?: readonly string[] | undefined;
+    /** excluded service names */
     exclude?: readonly string[] | undefined;
   }>;
   roles?: Readonly<{
+    /** included role fullnames */
     include?: readonly string[] | undefined;
+    /** excluded role fullnames */
     exclude?: readonly string[] | undefined;
   }>;
   monitors?: Readonly<{
+    /** included monitor ids */
     include?: readonly string[] | undefined;
+    /** excluded monitor ids */
     exclude?: readonly string[] | undefined;
   }>;
 }>;
