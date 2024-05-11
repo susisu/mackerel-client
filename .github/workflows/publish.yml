@@ -1,4 +1,3 @@
-# WIP
 name: Publish
 
 on:
@@ -19,12 +18,12 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-      - name: npx jsr publish
+      - name: publish
         run: |
           if [ "$DRY_RUN" ]; then
-            echo "publish --dry-run"
+            npx jsr publish --dry-run
           else
-            echo "publish"
+            npx jsr publish
           fi
         env:
           DRY_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry-run) && '1' || '' }}
