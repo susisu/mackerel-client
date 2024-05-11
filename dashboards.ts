@@ -30,8 +30,8 @@ export type DashboardGraphWidget =
   & {
     type: "graph";
     graph: DashboardGraphWidgetGraph;
-    xRange: DashboardGraphWidgetXRange | undefined;
-    yRange: DashboardGraphWidgetYRange | undefined;
+    range: DashboardGraphWidgetRange | undefined;
+    valueRange: DashboardGraphWidgetValueRange | undefined;
     referenceLines: DashboardGraphWidgetReferenceLine[];
   };
 
@@ -108,23 +108,23 @@ export type DashboardGraphWidgetUnknownGraph = {
   type: "unknown";
 };
 
-export type DashboardGraphWidgetXRange =
-  | DashboardGraphWidgetXRangeRelative
-  | DashboardGraphWidgetXRangeAbsolute;
+export type DashboardGraphWidgetRange =
+  | DashboardGraphWidgetRangeRelative
+  | DashboardGraphWidgetRangeAbsolute;
 
-export type DashboardGraphWidgetXRangeRelative = {
+export type DashboardGraphWidgetRangeRelative = {
   type: "relative";
   periodSeconds: number;
   offsetSeconds: number;
 };
 
-export type DashboardGraphWidgetXRangeAbsolute = {
+export type DashboardGraphWidgetRangeAbsolute = {
   type: "absolute";
   from: Date;
   to: Date;
 };
 
-export type DashboardGraphWidgetYRange = {
+export type DashboardGraphWidgetValueRange = {
   min: number | undefined;
   max: number | undefined;
 };
@@ -201,8 +201,8 @@ export type CreateDashboardInputGraphWidget =
   & Readonly<{
     type: "graph";
     graph: CreateDashboardInputGraphWidgetGraph;
-    xRange?: CreateDashboardInputGraphWidgetXRange | undefined;
-    yRange?: CreateDashboardInputGraphWidgetYRange | undefined;
+    range?: CreateDashboardInputGraphWidgetRange | undefined;
+    valueRange?: CreateDashboardInputGraphWidgetValueRange | undefined;
     referenceLines?: readonly CreateDashboardInputGraphWidgetReferenceLine[] | undefined;
   }>;
 
@@ -279,23 +279,23 @@ export type CreateDashboardInputGraphWidgetUnknownGraph = Readonly<{
   type: "unknown";
 }>;
 
-export type CreateDashboardInputGraphWidgetXRange =
-  | CreateDashboardInputGraphWidgetXRangeRelative
-  | CreateDashboardInputGraphWidgetXRangeAbsolute;
+export type CreateDashboardInputGraphWidgetRange =
+  | CreateDashboardInputGraphWidgetRangeRelative
+  | CreateDashboardInputGraphWidgetRangeAbsolute;
 
-export type CreateDashboardInputGraphWidgetXRangeRelative = Readonly<{
+export type CreateDashboardInputGraphWidgetRangeRelative = Readonly<{
   type: "relative";
   periodSeconds: number;
   offsetSeconds: number;
 }>;
 
-export type CreateDashboardInputGraphWidgetXRangeAbsolute = Readonly<{
+export type CreateDashboardInputGraphWidgetRangeAbsolute = Readonly<{
   type: "absolute";
   from: Date;
   to: Date;
 }>;
 
-export type CreateDashboardInputGraphWidgetYRange = Readonly<{
+export type CreateDashboardInputGraphWidgetValueRange = Readonly<{
   min?: number | undefined;
   max?: number | undefined;
 }>;
@@ -596,8 +596,8 @@ function fromRawDashboardWidget(raw: RawDashboardWidget): DashboardWidget {
         ...base,
         type: "graph",
         graph: fromRawDashboardGraphWidgetGraph(raw.graph),
-        xRange: raw.range ? fromRawDashboardGraphWidgetRange(raw.range) : undefined,
-        yRange: typeof raw.valueRange.min === "number" || typeof raw.valueRange.max === "number"
+        range: raw.range ? fromRawDashboardGraphWidgetRange(raw.range) : undefined,
+        valueRange: typeof raw.valueRange.min === "number" || typeof raw.valueRange.max === "number"
           ? {
             min: raw.valueRange.min ?? undefined,
             max: raw.valueRange.max ?? undefined,
@@ -684,7 +684,7 @@ function fromRawDashboardGraphWidgetGraph(
 
 function fromRawDashboardGraphWidgetRange(
   raw: RawDashboardGraphWidgetRange,
-): DashboardGraphWidgetXRange {
+): DashboardGraphWidgetRange {
   switch (raw.type) {
     case "relative":
       return {
@@ -926,8 +926,8 @@ function toRawCreateDashboardInputWidget(
         ...base,
         type: "graph",
         graph: toRawCreateDashboardInputGraphWidgetGraph(widget.graph),
-        range: widget.xRange ? toRawCreateDashboardInputGraphWidgetRange(widget.xRange) : undefined,
-        valueRange: widget.yRange,
+        range: widget.range ? toRawCreateDashboardInputGraphWidgetRange(widget.range) : undefined,
+        valueRange: widget.valueRange,
         referenceLines: widget.referenceLines,
       };
     case "value":
@@ -1014,7 +1014,7 @@ function toRawCreateDashboardInputGraphWidgetGraph(
 }
 
 function toRawCreateDashboardInputGraphWidgetRange(
-  xRange: CreateDashboardInputGraphWidgetXRange,
+  xRange: CreateDashboardInputGraphWidgetRange,
 ): RawCreateDashboardInputGraphWidgetRange {
   switch (xRange.type) {
     case "relative":
