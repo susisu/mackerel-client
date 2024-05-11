@@ -14,21 +14,16 @@ export type DataPoint = {
   value: number;
 };
 
-export type PostMetricsInputMetrics = {
-  readonly [metricName: string]: readonly PostMetricsInputDataPoint[];
-};
+/** `Map<metricName, DataPoint[]>` */
+export type PostMetricsInputMetrics = ReadonlyMap<string, readonly PostMetricsInputDataPoint[]>;
 
 export type PostMetricsInputDataPoint = Readonly<{
   time: Date;
   value: number;
 }>;
 
-export type BulkPostHostMetricsInputDataPoint = Readonly<{
-  hostId: string;
-  metricName: string;
-  time: Date;
-  value: number;
-}>;
+/** `Map<hostId, Map<metricName, DataPoint[]>>` */
+export type BulkPostHostMetricsInput = ReadonlyMap<string, PostMetricsInputMetrics>;
 
 export class MetricsApiClient {
   private fetcher: Fetcher;
@@ -141,7 +136,7 @@ export class MetricsApiClient {
       "POST",
       "/api/v0/tsdb",
       {
-        body: Object.entries(metrics).flatMap(([metricName, dataPoints]) =>
+        body: [...metrics.entries()].flatMap(([metricName, dataPoints]) =>
           dataPoints.map((dataPoint) => ({
             hostId,
             name: metricName,
@@ -155,7 +150,7 @@ export class MetricsApiClient {
   }
 
   async bulkPostHostMetrics(
-    dataPoints: readonly BulkPostHostMetricsInputDataPoint[],
+    input: BulkPostHostMetricsInput,
     options?: ApiOptions,
   ): Promise<void> {
     type RawInput = ReadonlyArray<
@@ -170,12 +165,16 @@ export class MetricsApiClient {
       "POST",
       "/api/v0/tsdb",
       {
-        body: dataPoints.map((dataPoint) => ({
-          hostId: dataPoint.hostId,
-          name: dataPoint.metricName,
-          time: Math.floor(dataPoint.time.getTime() / 1000),
-          value: dataPoint.value,
-        })),
+        body: [...input.entries()].flatMap(([hostId, metrics]) =>
+          [...metrics.entries()].flatMap(([metricName, dataPoints]) =>
+            dataPoints.map((dataPoint) => ({
+              hostId,
+              name: metricName,
+              time: Math.floor(dataPoint.time.getTime() / 1000),
+              value: dataPoint.value,
+            }))
+          )
+        ),
         signal: options?.signal,
       },
     );
@@ -197,7 +196,7 @@ export class MetricsApiClient {
       "POST",
       `/api/v0/services/${serviceName}/tsdb`,
       {
-        body: Object.entries(metrics).flatMap(([metricName, dataPoints]) =>
+        body: [...metrics.entries()].flatMap(([metricName, dataPoints]) =>
           dataPoints.map((dataPoint) => ({
             name: metricName,
             time: Math.floor(dataPoint.time.getTime() / 1000),
