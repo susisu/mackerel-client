@@ -32,14 +32,16 @@ export class GraphAnnotationsApiClient {
 
   async list(
     serviceName: string,
-    from: Date,
-    to: Date,
+    range: Readonly<{
+      from: Date;
+      to: Date;
+    }>,
     options?: ApiOptions,
   ): Promise<GraphAnnotation[]> {
     const params = new URLSearchParams({
       service: serviceName,
-      from: Math.floor(from.getTime() / 1000).toString(),
-      to: Math.floor(to.getTime() / 1000).toString(),
+      from: Math.floor(range.from.getTime() / 1000).toString(),
+      to: Math.floor(range.to.getTime() / 1000).toString(),
     });
     const res = await this.fetcher.fetch<{ graphAnnotations: RawGraphAnnotation[] }>(
       "GET",
