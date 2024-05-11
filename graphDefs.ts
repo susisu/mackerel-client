@@ -3,14 +3,14 @@ import type { ApiOptions, Fetcher } from "./fetcher.ts";
 export type CreateHostGraphDefsInputGraphDef = Readonly<{
   name: string;
   displayName?: string | undefined;
-  unit: GraphDefUnit;
-  metrics: readonly CreateHostGraphDefsInputGraphDefMetric[];
+  unit?: GraphDefUnit | undefined;
+  metrics?: readonly CreateHostGraphDefsInputGraphDefMetric[] | undefined;
 }>;
 
 export type CreateHostGraphDefsInputGraphDefMetric = Readonly<{
   name: string;
   displayName?: string | undefined;
-  isStacked: boolean;
+  isStacked?: boolean | undefined;
 }>;
 
 export type GraphDefUnit =
@@ -35,11 +35,33 @@ export class GraphDefsApiClient {
     graphDefs: readonly CreateHostGraphDefsInputGraphDef[],
     options?: ApiOptions,
   ): Promise<void> {
-    await this.fetcher.fetch<unknown, readonly CreateHostGraphDefsInputGraphDef[]>(
+    type RawInputGraphDef = Readonly<{
+      name: string;
+      displayName?: string | undefined;
+      unit: GraphDefUnit;
+      metrics: readonly RawInputGraphDefMetric[];
+    }>;
+    type RawInputGraphDefMetric = Readonly<{
+      name: string;
+      displayName?: string | undefined;
+      isStacked: boolean;
+    }>;
+    await this.fetcher.fetch<unknown, readonly RawInputGraphDef[]>(
       "POST",
       "/api/v0/graph-defs/create",
       {
-        body: graphDefs,
+        body: graphDefs.map((graphDef) => ({
+          name: graphDef.name,
+          displayName: graphDef.displayName,
+          unit: graphDef.unit ?? "float",
+          metrics: graphDef.metrics
+            ? graphDef.metrics.map((metric) => ({
+              name: metric.name,
+              displayName: metric.displayName,
+              isStacked: metric.isStacked ?? false,
+            }))
+            : [],
+        })),
         signal: options?.signal,
       },
     );
