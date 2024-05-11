@@ -387,8 +387,8 @@ type RawHost = {
 type RawInterface = {
   name: string;
   macAddress?: string | null | undefined;
-  ipv4Addresses: string[];
-  ipv6Addresses: string[];
+  ipv4Addresses?: string[] | null | undefined;
+  ipv6Addresses?: string[] | null | undefined;
   ipAddress?: string | null | undefined;
   ipv6Address?: string | null | undefined;
 };
@@ -409,8 +409,8 @@ function fromRawHost(raw: RawHost): Host {
     interfaces: raw.interfaces.map((iface) => ({
       name: iface.name,
       macAddress: iface.macAddress ?? undefined,
-      ipv4Addresses: iface.ipv4Addresses,
-      ipv6Addresses: iface.ipv6Addresses,
+      ipv4Addresses: iface.ipv4Addresses ?? [],
+      ipv6Addresses: iface.ipv6Addresses ?? [],
       ipAddress: iface.ipAddress ?? undefined,
       ipv6Address: iface.ipv6Address ?? undefined,
     })),
