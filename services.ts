@@ -268,7 +268,11 @@ export class ServicesApiClient {
 }
 
 export function parseRoleFullname(roleFullname: string): [serviceName: string, roleName: string] {
-  const [serviceName, roleName] = roleFullname.split(/:\s*/);
+  const parts = roleFullname.split(/:\s*/);
+  if (parts.length !== 2) {
+    throw new SyntaxError(`Invalid role full name: ${roleFullname}`);
+  }
+  const [serviceName, roleName] = parts;
   return [serviceName, roleName];
 }
 

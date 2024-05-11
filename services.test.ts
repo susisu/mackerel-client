@@ -1,4 +1,4 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { assertSpyCalls, spy } from "@std/testing/mock";
 import type { FetchOptions } from "./fetcher.ts";
@@ -340,6 +340,11 @@ describe("parseRoleFullname", () => {
   it("parses a role fullname", () => {
     assertEquals(parseRoleFullname("foo:bar"), ["foo", "bar"]);
     assertEquals(parseRoleFullname("baz: qux"), ["baz", "qux"]);
+  });
+
+  it("throws if role fullname is invalid", () => {
+    assertThrows(() => parseRoleFullname("foo"), SyntaxError);
+    assertThrows(() => parseRoleFullname("foo:bar:baz"), SyntaxError);
   });
 });
 
