@@ -25,7 +25,9 @@ type BaseMonitor = {
 export type ConnectivityMonitor = BaseMonitor & {
   type: "connectivity";
   scopes: {
+    /** included service names or role fullnames */
     include: string[] | undefined;
+    /** excluded service names or role fullnames */
     exclude: string[] | undefined;
   };
   alertStatus: ConnectivityMonitorAlertStatus;
@@ -35,7 +37,9 @@ export type HostMonitor = BaseMonitor & {
   type: "host";
   metricName: string;
   scopes: {
+    /** included service names or role fullnames */
     include: string[] | undefined;
+    /** excluded service names or role fullnames */
     exclude: string[] | undefined;
   };
   conditions: {
@@ -155,7 +159,9 @@ export type CreateConnectivityMonitorInput =
   & Readonly<{
     type: "connectivity";
     scopes?: Readonly<{
+      /** included service names or role fullnames */
       include?: readonly string[] | undefined;
+      /** excluded service names or role fullnames */
       exclude?: readonly string[] | undefined;
     }>;
     alertStatus?: ConnectivityMonitorAlertStatus | undefined;
@@ -167,7 +173,9 @@ export type CreateHostMonitorInput =
     type: "host";
     metricName: string;
     scopes?: Readonly<{
+      /** included service names or role fullnames */
       include?: readonly string[] | undefined;
+      /** excluded service names or role fullnames */
       exclude?: readonly string[] | undefined;
     }>;
     conditions: Readonly<{
