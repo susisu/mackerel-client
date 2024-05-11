@@ -73,7 +73,7 @@ describe("GraphAnnotationsApiClient", () => {
   });
 
   describe("#create", () => {
-    it("creates a GraphAnnotations via POST /api/v0/graph-annotations", async () => {
+    it("creates a GraphAnnotation via POST /api/v0/graph-annotations", async () => {
       const handler = spy((_?: FetchOptions) => ({
         id: "annotation-0",
         title: "my annotation",
@@ -123,7 +123,7 @@ describe("GraphAnnotationsApiClient", () => {
   });
 
   describe("#update", () => {
-    it("updates a GraphAnnotations via PUT /api/v0/graph-annotations/:annotationId", async () => {
+    it("updates a GraphAnnotation via PUT /api/v0/graph-annotations/:annotationId", async () => {
       const handler = spy((_?: FetchOptions) => ({
         id: "annotation-0",
         title: "my annotation",
@@ -173,7 +173,7 @@ describe("GraphAnnotationsApiClient", () => {
   });
 
   describe("#delete", () => {
-    it("deletes a GraphAnnotations via DELETE /api/v0/graph-annotations/:annotationId", async () => {
+    it("deletes a GraphAnnotation via DELETE /api/v0/graph-annotations/:annotationId", async () => {
       const handler = spy((_?: FetchOptions) => ({
         id: "annotation-0",
         title: "my annotation",
