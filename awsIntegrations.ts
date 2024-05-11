@@ -4,7 +4,7 @@ import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 assertType<
   Extends<
-    AwsIntegration & { connection: { secretKey: string } },
+    AwsIntegration & { auth: { secretKey: string } },
     CreateAwsIntegrationInput
   >
 >(true);
@@ -59,7 +59,7 @@ export type AwsIntegration = {
   id: string;
   name: string;
   memo: string;
-  connection: AwsIntegrationConnection;
+  auth: AwsIntegrationAuth;
   region: string;
   tags: {
     include: string;
@@ -68,16 +68,16 @@ export type AwsIntegration = {
   services: AwsIntegrationService[];
 };
 
-export type AwsIntegrationConnection =
-  | AwsIntegrationConnectionAccessKey
-  | AwsIntegrationConnectionAssumeRole;
+export type AwsIntegrationAuth =
+  | AwsIntegrationAuthAccessKey
+  | AwsIntegrationAuthAssumeRole;
 
-export type AwsIntegrationConnectionAccessKey = {
+export type AwsIntegrationAuthAccessKey = {
   type: "accessKey";
   accessKey: string;
 };
 
-export type AwsIntegrationConnectionAssumeRole = {
+export type AwsIntegrationAuthAssumeRole = {
   type: "assumeRole";
   roleArn: string;
   externalId: string | undefined;
@@ -118,7 +118,7 @@ export type AwsIntegrationServiceMetricsExclude = {
 export type CreateAwsIntegrationInput = Readonly<{
   name: string;
   memo?: string | undefined;
-  connection: CreateAwsIntegrationInputConnection;
+  auth: CreateAwsIntegrationInputAuth;
   region: string;
   tags?:
     | Readonly<{
@@ -129,17 +129,17 @@ export type CreateAwsIntegrationInput = Readonly<{
   services?: readonly CreateAwsIntegrationInputService[] | undefined;
 }>;
 
-export type CreateAwsIntegrationInputConnection =
-  | CreateAwsIntegrationInputConnectionAccessKey
-  | CreateAwsIntegrationInputConnectionAssumeRole;
+export type CreateAwsIntegrationInputAuth =
+  | CreateAwsIntegrationInputAuthAccessKey
+  | CreateAwsIntegrationInputAuthAssumeRole;
 
-export type CreateAwsIntegrationInputConnectionAccessKey = Readonly<{
+export type CreateAwsIntegrationInputAuthAccessKey = Readonly<{
   type: "accessKey";
   accessKey: string;
   secretKey: string;
 }>;
 
-export type CreateAwsIntegrationInputConnectionAssumeRole = Readonly<{
+export type CreateAwsIntegrationInputAuthAssumeRole = Readonly<{
   type: "assumeRole";
   roleArn: string;
   externalId: string | undefined;
@@ -184,7 +184,7 @@ export type CreateAwsIntegrationInputServiceMetricsExclude = Readonly<{
 export type UpdateAwsIntegrationInput = Readonly<{
   name: string;
   memo?: string | undefined;
-  connection?: CreateAwsIntegrationInputConnection | undefined;
+  auth?: CreateAwsIntegrationInputAuth | undefined;
   region: string;
   tags?:
     | Readonly<{
@@ -317,7 +317,7 @@ function fromRawAwsIntegration(raw: RawAwsIntegration): AwsIntegration {
     id: raw.id,
     name: raw.name,
     memo: raw.memo,
-    connection: typeof raw.roleArn === "string"
+    auth: typeof raw.roleArn === "string"
       ? {
         type: "assumeRole",
         roleArn: raw.roleArn,
@@ -390,10 +390,10 @@ function toRawCreateAwsIntegrationInput(
   return {
     name: input.name,
     memo: input.memo ?? "",
-    key: input.connection.type === "accessKey" ? input.connection.accessKey : null,
-    secretKey: input.connection.type === "accessKey" ? input.connection.secretKey : null,
-    roleArn: input.connection.type == "assumeRole" ? input.connection.roleArn : null,
-    externalId: input.connection.type == "assumeRole" ? input.connection.externalId : null,
+    key: input.auth.type === "accessKey" ? input.auth.accessKey : null,
+    secretKey: input.auth.type === "accessKey" ? input.auth.secretKey : null,
+    roleArn: input.auth.type == "assumeRole" ? input.auth.roleArn : null,
+    externalId: input.auth.type == "assumeRole" ? input.auth.externalId : null,
     region: input.region,
     includedTags: input.tags?.include ?? "",
     excludedTags: input.tags?.exclude ?? "",
@@ -434,25 +434,17 @@ function toRawUpdateAwsIntegrationInput(
   return {
     name: input.name,
     memo: input.memo ?? "",
-    key: !input.connection
+    key: !input.auth ? undefined : input.auth.type === "accessKey" ? input.auth.accessKey : null,
+    secretKey: !input.auth
       ? undefined
-      : input.connection.type === "accessKey"
-      ? input.connection.accessKey
+      : input.auth.type === "accessKey"
+      ? input.auth.secretKey
       : null,
-    secretKey: !input.connection
+    roleArn: !input.auth ? undefined : input.auth.type == "assumeRole" ? input.auth.roleArn : null,
+    externalId: !input.auth
       ? undefined
-      : input.connection.type === "accessKey"
-      ? input.connection.secretKey
-      : null,
-    roleArn: !input.connection
-      ? undefined
-      : input.connection.type == "assumeRole"
-      ? input.connection.roleArn
-      : null,
-    externalId: !input.connection
-      ? undefined
-      : input.connection.type == "assumeRole"
-      ? input.connection.externalId
+      : input.auth.type == "assumeRole"
+      ? input.auth.externalId
       : null,
     region: input.region,
     includedTags: input.tags?.include ?? "",
