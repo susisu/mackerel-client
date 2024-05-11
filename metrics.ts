@@ -4,6 +4,11 @@ import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 assertType<Extends<DataPoint, PostMetricsInputDataPoint>>(true);
 
+export type TimeRange = {
+  from: Date;
+  to: Date;
+};
+
 export type DataPoint = {
   time: Date;
   value: number;
@@ -35,14 +40,13 @@ export class MetricsApiClient {
   async getHostMetrics(
     hostId: string,
     metricName: string,
-    from: Date,
-    to: Date,
+    range: TimeRange,
     options?: ApiOptions,
   ): Promise<DataPoint[]> {
     const params = new URLSearchParams({
       name: metricName,
-      from: Math.floor(from.getTime() / 1000).toString(),
-      to: Math.floor(to.getTime() / 1000).toString(),
+      from: Math.floor(range.from.getTime() / 1000).toString(),
+      to: Math.floor(range.to.getTime() / 1000).toString(),
     });
     const res = await this.fetcher.fetch<{ metrics: RawDataPoint[] }>(
       "GET",
@@ -58,14 +62,13 @@ export class MetricsApiClient {
   async getServiceMetrics(
     serviceName: string,
     metricName: string,
-    from: Date,
-    to: Date,
+    range: TimeRange,
     options?: ApiOptions,
   ): Promise<DataPoint[]> {
     const params = new URLSearchParams({
       name: metricName,
-      from: Math.floor(from.getTime() / 1000).toString(),
-      to: Math.floor(to.getTime() / 1000).toString(),
+      from: Math.floor(range.from.getTime() / 1000).toString(),
+      to: Math.floor(range.to.getTime() / 1000).toString(),
     });
     const res = await this.fetcher.fetch<{ metrics: RawDataPoint[] }>(
       "GET",
