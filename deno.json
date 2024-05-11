@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "publish": {
     "include": [
+      "deno.json",
       "LICENSE",
       "README.md",
       "**/*.ts"
