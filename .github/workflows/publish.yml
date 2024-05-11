@@ -11,7 +11,7 @@ on:
         default: false
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
