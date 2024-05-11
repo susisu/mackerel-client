@@ -272,13 +272,13 @@ export class AwsIntegrationsApiClient {
     return res.externalId;
   }
 
-  async listMetricNames(options?: ApiOptions): Promise<{ [K in AwsServiceType]: string[] }> {
+  async listMetricNames(options?: ApiOptions): Promise<Map<AwsServiceType, string[]>> {
     const res = await this.fetcher.fetch<{ [K in AwsServiceType]: string[] }>(
       "GET",
       "/api/v0/aws-integrations-excludable-metrics",
       { signal: options?.signal },
     );
-    return res;
+    return new Map(Object.entries(res));
   }
 }
 
