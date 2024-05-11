@@ -33,7 +33,7 @@ export type WeeklyDowntimeReccurence =
   & BaseDowntimeRecurrence
   & Readonly<{
     type: "weekly";
-    weekdays: DowntimeRecurrenceWeekday[] | undefined;
+    weekdays: DowntimeRecurrenceWeekday[];
   }>;
 
 export type DowntimeRecurrenceType = DowntimeRecurrence["type"];
@@ -240,7 +240,7 @@ function fromRawDowntime(raw: RawDowntime): Downtime {
             return {
               ...base,
               type: recurrence.type,
-              weekdays: recurrence.weekdays ?? undefined,
+              weekdays: recurrence.weekdays ?? [],
             };
           case "hourly":
           case "daily":
