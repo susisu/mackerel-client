@@ -128,10 +128,7 @@ export type ConnectivityMonitorAlertStatus = "CRITICAL" | "WARNING";
 
 export type ExternalMonitorHttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
-export type ExternalMonitorHeader = {
-  name: string;
-  value: string;
-};
+export type ExternalMonitorHeader = [name: string, value: string];
 
 export type AnomalyDetectionMonitorSensitivity =
   | "insensitive"
@@ -276,10 +273,7 @@ export type CreateQueryMonitorInput =
     }>;
   }>;
 
-type CreateExternalMonitorInputHeader = Readonly<{
-  name: string;
-  value: string;
-}>;
+export type CreateExternalMonitorInputHeader = readonly [name: string, value: string];
 
 export type CheckMonitoringReport = Readonly<{
   name: string;
@@ -553,7 +547,7 @@ function fromRawMonitor(raw: RawMonitor): Monitor {
         request: {
           url: raw.url,
           method: raw.method,
-          headers: raw.headers,
+          headers: raw.headers.map((header) => [header.name, header.value]),
           body: raw.requestBody ?? "",
           followRedirects: raw.followRedirect ?? false,
           skipCertificateVerification: raw.skipCertificateVerification ?? false,
@@ -776,7 +770,7 @@ function toRawCreateMonitorInput(
         headers: input.request.headers instanceof Headers
           ? [...input.request.headers].map(([name, value]) => ({ name, value }))
           : input.request.headers
-          ? input.request.headers
+          ? input.request.headers.map(([name, value]) => ({ name, value }))
           : undefined,
         requestBody: input.request.body,
         // defaults to true as the web console does
