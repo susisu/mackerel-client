@@ -12,10 +12,10 @@ describe("MetricsApiClient", () => {
         names: ["loadavg5", "cpu.user.percentage"],
       }));
       const fetcher = new MockFetcher()
-        .mock("GET", "/api/v0/hosts/id-0/metric-names", handler);
+        .mock("GET", "/api/v0/hosts/host-0/metric-names", handler);
       const cli = new MetricsApiClient(fetcher);
 
-      const metricNames = await cli.listHostMetricNames("id-0");
+      const metricNames = await cli.listHostMetricNames("host-0");
 
       assertSpyCalls(handler, 1);
 
@@ -32,10 +32,10 @@ describe("MetricsApiClient", () => {
         ],
       }));
       const fetcher = new MockFetcher()
-        .mock("GET", "/api/v0/hosts/id-0/metrics", handler);
+        .mock("GET", "/api/v0/hosts/host-0/metrics", handler);
       const cli = new MetricsApiClient(fetcher);
 
-      const dataPoints = await cli.getHostMetricDataPoints("id-0", "loadavg5", {
+      const dataPoints = await cli.getHostMetricDataPoints("host-0", "loadavg5", {
         from: new Date("2024-06-06T12:00:00Z"),
         to: new Date("2024-06-06T13:00:00Z"),
       });
@@ -97,11 +97,11 @@ describe("MetricsApiClient", () => {
     it("gets the latest DataPoints via GET /api/v0/tsdb/latest", async () => {
       const handler = spy((_?: FetchOptions) => ({
         tsdbLatest: {
-          "id-0": {
+          "host-0": {
             "loadavg5": { time: 1717675200, value: 42 },
             "cpu.user.percentage": { time: 1717675260, value: 43 },
           },
-          "id-1": {
+          "host-1": {
             "loadavg5": { time: 1717675200, value: 44 },
             "cpu.user.percentage": { time: 1717675260, value: 45 },
           },
@@ -111,7 +111,7 @@ describe("MetricsApiClient", () => {
         .mock("GET", "/api/v0/tsdb/latest", handler);
       const cli = new MetricsApiClient(fetcher);
 
-      const dataPoints = await cli.getLatestHostMetricDataPoints(["id-0", "id-1"], [
+      const dataPoints = await cli.getLatestHostMetricDataPoints(["host-0", "host-1"], [
         "loadavg5",
         "cpu.user.percentage",
       ]);
@@ -121,8 +121,8 @@ describe("MetricsApiClient", () => {
       assertEquals(
         params,
         new URLSearchParams([
-          ["hostId", "id-0"],
-          ["hostId", "id-1"],
+          ["hostId", "host-0"],
+          ["hostId", "host-1"],
           ["name", "loadavg5"],
           ["name", "cpu.user.percentage"],
         ]),
@@ -132,14 +132,14 @@ describe("MetricsApiClient", () => {
         dataPoints,
         new Map([
           [
-            "id-0",
+            "host-0",
             new Map([
               ["loadavg5", { time: new Date("2024-06-06T12:00:00Z"), value: 42 }],
               ["cpu.user.percentage", { time: new Date("2024-06-06T12:01:00Z"), value: 43 }],
             ]),
           ],
           [
-            "id-1",
+            "host-1",
             new Map([
               ["loadavg5", { time: new Date("2024-06-06T12:00:00Z"), value: 44 }],
               ["cpu.user.percentage", { time: new Date("2024-06-06T12:01:00Z"), value: 45 }],
@@ -158,7 +158,7 @@ describe("MetricsApiClient", () => {
       const cli = new MetricsApiClient(fetcher);
 
       await cli.postHostMetrics(
-        "id-0",
+        "host-0",
         new Map([
           ["loadavg5", [
             { time: new Date("2024-06-06T12:00:00Z"), value: 42 },
@@ -174,10 +174,10 @@ describe("MetricsApiClient", () => {
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
       assertEquals(body, [
-        { hostId: "id-0", name: "loadavg5", time: 1717675200, value: 42 },
-        { hostId: "id-0", name: "loadavg5", time: 1717675260, value: 43 },
-        { hostId: "id-0", name: "cpu.user.percentage", time: 1717675200, value: 44 },
-        { hostId: "id-0", name: "cpu.user.percentage", time: 1717675260, value: 45 },
+        { hostId: "host-0", name: "loadavg5", time: 1717675200, value: 42 },
+        { hostId: "host-0", name: "loadavg5", time: 1717675260, value: 43 },
+        { hostId: "host-0", name: "cpu.user.percentage", time: 1717675200, value: 44 },
+        { hostId: "host-0", name: "cpu.user.percentage", time: 1717675260, value: 45 },
       ]);
     });
   });
@@ -192,14 +192,14 @@ describe("MetricsApiClient", () => {
       await cli.bulkPostHostMetrics(
         new Map([
           [
-            "id-0",
+            "host-0",
             new Map([
               ["loadavg5", [{ time: new Date("2024-06-06T12:00:00Z"), value: 42 }]],
               ["cpu.user.percentage", [{ time: new Date("2024-06-06T12:01:00Z"), value: 43 }]],
             ]),
           ],
           [
-            "id-1",
+            "host-1",
             new Map([
               ["loadavg5", [{ time: new Date("2024-06-06T12:00:00Z"), value: 44 }]],
               ["cpu.user.percentage", [{ time: new Date("2024-06-06T12:01:00Z"), value: 45 }]],
@@ -211,10 +211,10 @@ describe("MetricsApiClient", () => {
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
       assertEquals(body, [
-        { hostId: "id-0", name: "loadavg5", time: 1717675200, value: 42 },
-        { hostId: "id-0", name: "cpu.user.percentage", time: 1717675260, value: 43 },
-        { hostId: "id-1", name: "loadavg5", time: 1717675200, value: 44 },
-        { hostId: "id-1", name: "cpu.user.percentage", time: 1717675260, value: 45 },
+        { hostId: "host-0", name: "loadavg5", time: 1717675200, value: 42 },
+        { hostId: "host-0", name: "cpu.user.percentage", time: 1717675260, value: 43 },
+        { hostId: "host-1", name: "loadavg5", time: 1717675200, value: 44 },
+        { hostId: "host-1", name: "cpu.user.percentage", time: 1717675260, value: 45 },
       ]);
     });
   });

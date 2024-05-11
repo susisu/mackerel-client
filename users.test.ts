@@ -11,7 +11,7 @@ describe("UsersApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({
         users: [
           {
-            id: "id-0",
+            id: "user-0",
             screenName: "foo",
             email: "foo@example.com",
             authority: "owner",
@@ -21,7 +21,7 @@ describe("UsersApiClient", () => {
             joinedAt: 1717677296,
           },
           {
-            id: "id-1",
+            id: "user-1",
             screenName: "bar",
             email: "bar@example.com",
             authority: "manager",
@@ -42,7 +42,7 @@ describe("UsersApiClient", () => {
 
       assertEquals(users, [
         {
-          id: "id-0",
+          id: "user-0",
           screenName: "foo",
           email: "foo@example.com",
           authority: "owner",
@@ -52,7 +52,7 @@ describe("UsersApiClient", () => {
           joinedAt: new Date("2024-06-06T12:34:56Z"),
         },
         {
-          id: "id-1",
+          id: "user-1",
           screenName: "bar",
           email: "bar@example.com",
           authority: "manager",
@@ -68,7 +68,7 @@ describe("UsersApiClient", () => {
   describe("#remove", () => {
     it("removes a User via DELETE /api/v0/users/:userId", async () => {
       const handler = spy((_?: FetchOptions) => ({
-        id: "id-1",
+        id: "user-1",
         screenName: "bar",
         email: "bar@example.com",
         authority: "manager",
@@ -78,17 +78,17 @@ describe("UsersApiClient", () => {
         joinedAt: 1720355696,
       }));
       const fetcher = new MockFetcher()
-        .mock("DELETE", "/api/v0/users/id-1", handler);
+        .mock("DELETE", "/api/v0/users/user-1", handler);
       const cli = new UsersApiClient(fetcher);
 
-      const user = await cli.remove("id-1");
+      const user = await cli.remove("user-1");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
       assertEquals(body, {});
 
       assertEquals(user, {
-        id: "id-1",
+        id: "user-1",
         screenName: "bar",
         email: "bar@example.com",
         authority: "manager",
