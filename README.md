@@ -8,7 +8,7 @@
 
 Install from JSR.
 
-``` console
+```console
 # Deno
 deno add @susisu/mackerel-client
 # Node.js
@@ -17,7 +17,7 @@ npx jsr add @susisu/mackerel-client
 
 ## Usage
 
-``` ts
+```ts
 import { MackerelClient } from "@susisu/mackerel-client";
 
 const cli = new MackerelClient("<YOUR API KEY>");
