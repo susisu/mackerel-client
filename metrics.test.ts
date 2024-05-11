@@ -6,6 +6,23 @@ import { MockFetcher } from "./fetcher.ts";
 import { MetricsApiClient } from "./metrics.ts";
 
 describe("MetricsApiClient", () => {
+  describe("#listHostMetricNames", () => {
+    it("list Host metric names via GET /api/v0/hosts/:hostId/metric-names", async () => {
+      const handler = spy((_?: FetchOptions) => ({
+        names: ["loadavg5", "cpu.user.percentage"],
+      }));
+      const fetcher = new MockFetcher()
+        .mock("GET", "/api/v0/hosts/id-0/metric-names", handler);
+      const cli = new MetricsApiClient(fetcher);
+
+      const metricNames = await cli.listHostMetricNames("id-0");
+
+      assertSpyCalls(handler, 1);
+
+      assertEquals(metricNames, ["loadavg5", "cpu.user.percentage"]);
+    });
+  });
+
   describe("#getHostMetricDataPoints", () => {
     it("gets DataPoints via GET /api/v0/hosts/:hostId/metrics", async () => {
       const handler = spy((_?: FetchOptions) => ({

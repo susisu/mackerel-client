@@ -32,6 +32,18 @@ export class MetricsApiClient {
     this.fetcher = fetcher;
   }
 
+  async listHostMetricNames(
+    hostId: string,
+    options?: ApiOptions,
+  ): Promise<string[]> {
+    const res = await this.fetcher.fetch<{ names: string[] }>(
+      "GET",
+      `/api/v0/hosts/${hostId}/metric-names`,
+      { signal: options?.signal },
+    );
+    return res.names;
+  }
+
   async getHostMetricDataPoints(
     hostId: string,
     metricName: string,
