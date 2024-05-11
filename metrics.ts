@@ -4,11 +4,6 @@ import type { ApiOptions, Fetcher } from "./fetcher.ts";
 
 assertType<Extends<DataPoint, PostMetricsInputDataPoint>>(true);
 
-export type TimeRange = {
-  from: Date;
-  to: Date;
-};
-
 export type DataPoint = {
   time: Date;
   value: number;
@@ -47,7 +42,10 @@ export class MetricsApiClient {
   async getHostMetricDataPoints(
     hostId: string,
     metricName: string,
-    range: TimeRange,
+    range: Readonly<{
+      from: Date;
+      to: Date;
+    }>,
     options?: ApiOptions,
   ): Promise<DataPoint[]> {
     const params = new URLSearchParams({
@@ -69,7 +67,10 @@ export class MetricsApiClient {
   async getServiceMetricDataPoints(
     serviceName: string,
     metricName: string,
-    range: TimeRange,
+    range: Readonly<{
+      from: Date;
+      to: Date;
+    }>,
     options?: ApiOptions,
   ): Promise<DataPoint[]> {
     const params = new URLSearchParams({
