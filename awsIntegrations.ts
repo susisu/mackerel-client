@@ -264,7 +264,10 @@ export class AwsIntegrationsApiClient {
     const res = await this.fetcher.fetch<{ externalId: string }>(
       "POST",
       "/api/v0/aws-integrations-external-id",
-      { signal: options?.signal },
+      {
+        body: {},
+        signal: options?.signal,
+      },
     );
     return res.externalId;
   }
