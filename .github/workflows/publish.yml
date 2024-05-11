@@ -1,0 +1,30 @@
+# WIP
+name: Publish
+
+on:
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: npx jsr publish
+        run: |
+          if [ "$DRY_RUN" ]; then
+            echo "publish --dry-run"
+          else
+            echo "publish"
+          fi
+        env:
+          DRY_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry-run) && '1' || '' }}
