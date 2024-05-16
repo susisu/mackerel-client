@@ -1,6 +1,7 @@
 # mackerel-client
 
-[![CI](https://github.com/susisu/mackerel-client/workflows/CI/badge.svg)](https://github.com/susisu/mackerel-client/actions?query=workflow%3ACI)
+[![JSR](https://jsr.io/badges/@susisu/mackerel-client)](https://jsr.io/@susisu/mackerel-client)
+[![CI](https://github.com/susisu/mackerel-client/actions/workflows/ci.yml/badge.svg)](https://github.com/susisu/mackerel-client/actions/workflows/ci.yml)
 
 (unofficial) TypeScript client for the [Mackerel API](https://mackerel.io/api-docs/)
 
