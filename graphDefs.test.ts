@@ -7,7 +7,7 @@ import { GraphDefsApiClient } from "./graphDefs.ts";
 
 describe("GraphDefsApiClient", () => {
   describe("#createHostGraphDefs", () => {
-    it("creates GraphDefs via POST /api/v0/graph-defs/create", async () => {
+    it("creates HostGraphDefs via POST /api/v0/graph-defs/create", async () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/graph-defs/create", handler);
@@ -61,6 +61,21 @@ describe("GraphDefsApiClient", () => {
           metrics: [],
         },
       ]);
+    });
+  });
+
+  describe("#deleteHostGraphDef", () => {
+    it("deletes a HostGraphDef via DELETE /api/v0/graph-defs", async () => {
+      const handler = spy((_?: FetchOptions) => ({ success: true }));
+      const fetcher = new MockFetcher()
+        .mock("DELETE", "/api/v0/graph-defs", handler);
+      const cli = new GraphDefsApiClient(fetcher);
+
+      await cli.deleteHostGraphDef("custom.foo");
+
+      assertSpyCalls(handler, 1);
+      const body = handler.calls[0].args[0]?.body;
+      assertEquals(body, { name: "custom.foo" });
     });
   });
 });

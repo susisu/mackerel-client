@@ -66,4 +66,18 @@ export class GraphDefsApiClient {
       },
     );
   }
+
+  async deleteHostGraphDef(
+    graphDefName: string,
+    options?: ApiOptions,
+  ): Promise<void> {
+    await this.fetcher.fetch<unknown, { name: string }>(
+      "DELETE",
+      "/api/v0/graph-defs",
+      {
+        body: { name: graphDefName },
+        signal: options?.signal,
+      },
+    );
+  }
 }
