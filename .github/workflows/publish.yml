@@ -18,12 +18,15 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
       - name: publish
         run: |
           if [ "$DRY_RUN" ]; then
-            npx jsr publish --dry-run
+            deno publish --dry-run
           else
-            npx jsr publish
+            deno publish
           fi
         env:
           DRY_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry-run) && '1' || '' }}
