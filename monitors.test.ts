@@ -85,15 +85,17 @@ describe("MonitorsApiClient", () => {
   describe("#get", () => {
     it("gets a Monitor via GET /api/v0/monitors/:monitorId", async () => {
       const handler = spy((_?: FetchOptions) => ({
-        id: "monitor-0",
-        name: "my monitor",
-        memo: "test",
-        notificationInterval: 60,
-        isMute: false,
-        type: "connectivity",
-        scopes: ["foo"],
-        excludeScopes: ["bar"],
-        alertStatusOnGone: "CRITICAL",
+        monitor: {
+          id: "monitor-0",
+          name: "my monitor",
+          memo: "test",
+          notificationInterval: 60,
+          isMute: false,
+          type: "connectivity",
+          scopes: ["foo"],
+          excludeScopes: ["bar"],
+          alertStatusOnGone: "CRITICAL",
+        }
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/monitors/monitor-0", handler);
