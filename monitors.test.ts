@@ -95,7 +95,7 @@ describe("MonitorsApiClient", () => {
           scopes: ["foo"],
           excludeScopes: ["bar"],
           alertStatusOnGone: "CRITICAL",
-        }
+        },
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/monitors/monitor-0", handler);
