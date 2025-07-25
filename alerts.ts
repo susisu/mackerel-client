@@ -306,7 +306,7 @@ function fromRawAlert(raw: RawAlert): Alert {
       };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (raw satisfies never as any).type;
+      const type = (raw satisfies never as any)?.type;
       throw new Error(`Unknown alert type: ${type}`, { cause: raw });
     }
   }

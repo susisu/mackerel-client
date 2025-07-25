@@ -601,7 +601,7 @@ function fromRawMonitor(raw: RawMonitor): Monitor {
       };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (raw satisfies never as any).type;
+      const type = (raw satisfies never as any)?.type;
       throw new Error(`Unknown monitor type: ${type}`, { cause: raw });
     }
   }
@@ -822,7 +822,7 @@ function toRawCreateMonitorInput(
       };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (input satisfies never as any).type;
+      const type = (input satisfies never as any)?.type;
       throw new Error(`Unknown monitor type: ${type}`, { cause: input });
     }
   }

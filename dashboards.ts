@@ -634,7 +634,7 @@ function fromRawDashboardWidget(raw: RawDashboardWidget): DashboardWidget {
       };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (raw satisfies never as any).type;
+      const type = (raw satisfies never as any)?.type;
       throw new Error(`Unknown widget type: ${type}`, { cause: raw });
     }
   }
@@ -676,7 +676,7 @@ function fromRawDashboardGraphWidgetGraph(
       };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (raw satisfies never as any).type;
+      const type = (raw satisfies never as any)?.type;
       throw new Error(`Unknown graph type: ${type}`, { cause: raw });
     }
   }
@@ -700,7 +700,7 @@ function fromRawDashboardGraphWidgetRange(
       };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (raw satisfies never as any).type;
+      const type = (raw satisfies never as any)?.type;
       throw new Error(`Unknown range type: ${type}`, { cause: raw });
     }
   }
@@ -735,7 +735,7 @@ function fromRawDashboardValueWidgetMetric(
       };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (raw satisfies never as any).type;
+      const type = (raw satisfies never as any)?.type;
       throw new Error(`Unknown metric type: ${type}`, { cause: raw });
     }
   }
@@ -965,7 +965,7 @@ function toRawCreateDashboardInputWidget(
       };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (widget satisfies never as any).type;
+      const type = (widget satisfies never as any)?.type;
       throw new Error(`Unknown widget type: ${type}`, { cause: widget });
     }
   }
@@ -1007,7 +1007,7 @@ function toRawCreateDashboardInputGraphWidgetGraph(
       };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (graph satisfies never as any).type;
+      const type = (graph satisfies never as any)?.type;
       throw new Error(`Unknown graph type: ${type}`, { cause: graph });
     }
   }
@@ -1031,7 +1031,7 @@ function toRawCreateDashboardInputGraphWidgetRange(
       };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (xRange satisfies never as any).type;
+      const type = (xRange satisfies never as any)?.type;
       throw new Error(`Unknown xRange type: ${type}`, { cause: xRange });
     }
   }
@@ -1066,7 +1066,7 @@ function toRawCreateDashboardInputValueWidgetMetric(
       };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (metric satisfies never as any).type;
+      const type = (metric satisfies never as any)?.type;
       throw new Error(`Unknown metric type: ${type}`, { cause: metric });
     }
   }

@@ -344,7 +344,7 @@ function fromRawChannel(raw: RawChannel): Channel {
       };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (raw satisfies never as any).type;
+      const type = (raw satisfies never as any)?.type;
       throw new Error(`Unknown channel type: ${type}`, { cause: raw });
     }
   }
@@ -427,7 +427,7 @@ function toRawCreateChannelInput(input: CreateChannelInput): RawCreateChannelInp
       };
     default: {
       // deno-lint-ignore no-explicit-any
-      const type = (input satisfies never as any).type;
+      const type = (input satisfies never as any)?.type;
       throw new Error(`Unknown channel type: ${type}`, { cause: input });
     }
   }
