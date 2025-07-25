@@ -307,12 +307,12 @@ export class MonitorsApiClient {
   }
 
   async get(monitorId: string, options?: ApiOptions): Promise<Monitor> {
-    const res = await this.fetcher.fetch<RawMonitor>(
+    const res = await this.fetcher.fetch<{ monitor: RawMonitor }>(
       "GET",
       `/api/v0/monitors/${monitorId}`,
       { signal: options?.signal },
     );
-    return fromRawMonitor(res);
+    return fromRawMonitor(res.monitor);
   }
 
   async create(input: CreateMonitorInput, options?: ApiOptions): Promise<Monitor> {
