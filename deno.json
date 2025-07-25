@@ -32,8 +32,7 @@
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@^1.0.13",
-    "@std/testing": "jsr:@std/testing@^1.0.15",
-    "mock_fetch": "https://deno.land/x/mock_fetch@0.3.0/mod.ts"
+    "@std/testing": "jsr:@std/testing@^1.0.15"
   },
   "fmt": {
     "lineWidth": 100
