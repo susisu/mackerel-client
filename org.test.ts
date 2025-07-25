@@ -14,9 +14,9 @@ describe("OrgApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/org", handler);
-      const cli = new OrgApiClient(fetcher);
+      const client = new OrgApiClient(fetcher);
 
-      const org = await cli.get();
+      const org = await client.get();
 
       assertSpyCalls(handler, 1);
 

@@ -36,9 +36,9 @@ describe("AlertsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/alerts", handler);
-      const cli = new AlertsApiClient(fetcher);
+      const client = new AlertsApiClient(fetcher);
 
-      const { alerts, cursor } = await cli.list({
+      const { alerts, cursor } = await client.list({
         includeClosed: true,
         limit: 2,
         cursor: "alert-0",
@@ -99,9 +99,9 @@ describe("AlertsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/alerts/alert-0", handler);
-      const cli = new AlertsApiClient(fetcher);
+      const client = new AlertsApiClient(fetcher);
 
-      const alert = await cli.get("alert-0");
+      const alert = await client.get("alert-0");
 
       assertSpyCalls(handler, 1);
 
@@ -128,9 +128,9 @@ describe("AlertsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("PUT", "/api/v0/alerts/alert-0", handler);
-      const cli = new AlertsApiClient(fetcher);
+      const client = new AlertsApiClient(fetcher);
 
-      await cli.update("alert-0", { memo: "test" });
+      await client.update("alert-0", { memo: "test" });
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -153,9 +153,9 @@ describe("AlertsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/alerts/alert-0/close", handler);
-      const cli = new AlertsApiClient(fetcher);
+      const client = new AlertsApiClient(fetcher);
 
-      const alert = await cli.close("alert-0", "outdated");
+      const alert = await client.close("alert-0", "outdated");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;

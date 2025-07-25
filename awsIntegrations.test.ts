@@ -37,9 +37,9 @@ describe("AwsIntegrationsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/aws-integrations", handler);
-      const cli = new AwsIntegrationsApiClient(fetcher);
+      const client = new AwsIntegrationsApiClient(fetcher);
 
-      const integrations = await cli.list();
+      const integrations = await client.list();
 
       assertSpyCalls(handler, 1);
 
@@ -101,9 +101,9 @@ describe("AwsIntegrationsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/aws-integrations/integration-0", handler);
-      const cli = new AwsIntegrationsApiClient(fetcher);
+      const client = new AwsIntegrationsApiClient(fetcher);
 
-      const integration = await cli.get("integration-0");
+      const integration = await client.get("integration-0");
 
       assertSpyCalls(handler, 1);
 
@@ -163,9 +163,9 @@ describe("AwsIntegrationsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/aws-integrations", handler);
-      const cli = new AwsIntegrationsApiClient(fetcher);
+      const client = new AwsIntegrationsApiClient(fetcher);
 
-      const integration = await cli.create({
+      const integration = await client.create({
         name: "my integration",
         memo: "test",
         auth: {
@@ -270,9 +270,9 @@ describe("AwsIntegrationsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("PUT", "/api/v0/aws-integrations/integration-0", handler);
-      const cli = new AwsIntegrationsApiClient(fetcher);
+      const client = new AwsIntegrationsApiClient(fetcher);
 
-      const integration = await cli.update("integration-0", {
+      const integration = await client.update("integration-0", {
         name: "my integration",
         memo: "test",
         region: "ap-northeast-1",
@@ -372,9 +372,9 @@ describe("AwsIntegrationsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/aws-integrations/integration-0", handler);
-      const cli = new AwsIntegrationsApiClient(fetcher);
+      const client = new AwsIntegrationsApiClient(fetcher);
 
-      const integration = await cli.delete("integration-0");
+      const integration = await client.delete("integration-0");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -414,9 +414,9 @@ describe("AwsIntegrationsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ externalId: "test-externalId" }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/aws-integrations-external-id", handler);
-      const cli = new AwsIntegrationsApiClient(fetcher);
+      const client = new AwsIntegrationsApiClient(fetcher);
 
-      const externalId = await cli.createExternalId();
+      const externalId = await client.createExternalId();
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -434,9 +434,9 @@ describe("AwsIntegrationsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/aws-integrations-excludable-metrics", handler);
-      const cli = new AwsIntegrationsApiClient(fetcher);
+      const client = new AwsIntegrationsApiClient(fetcher);
 
-      const metricNames = await cli.listMetricNames();
+      const metricNames = await client.listMetricNames();
 
       assertSpyCalls(handler, 1);
 

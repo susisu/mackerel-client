@@ -27,9 +27,9 @@ describe("AlertGroupSettingsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/alert-group-settings", handler);
-      const cli = new AlertGroupSettingsApiClient(fetcher);
+      const client = new AlertGroupSettingsApiClient(fetcher);
 
-      const settings = await cli.list();
+      const settings = await client.list();
 
       assertSpyCalls(handler, 1);
 
@@ -73,9 +73,9 @@ describe("AlertGroupSettingsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/alert-group-settings/setting-0", handler);
-      const cli = new AlertGroupSettingsApiClient(fetcher);
+      const client = new AlertGroupSettingsApiClient(fetcher);
 
-      const setting = await cli.get("setting-0");
+      const setting = await client.get("setting-0");
 
       assertSpyCalls(handler, 1);
 
@@ -106,9 +106,9 @@ describe("AlertGroupSettingsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/alert-group-settings", handler);
-      const cli = new AlertGroupSettingsApiClient(fetcher);
+      const client = new AlertGroupSettingsApiClient(fetcher);
 
-      const setting = await cli.create({
+      const setting = await client.create({
         name: "my alert group",
         memo: "test",
         scopes: {
@@ -157,9 +157,9 @@ describe("AlertGroupSettingsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("PUT", "/api/v0/alert-group-settings/setting-0", handler);
-      const cli = new AlertGroupSettingsApiClient(fetcher);
+      const client = new AlertGroupSettingsApiClient(fetcher);
 
-      const setting = await cli.update("setting-0", {
+      const setting = await client.update("setting-0", {
         name: "my alert group",
         memo: "test",
         scopes: {
@@ -208,9 +208,9 @@ describe("AlertGroupSettingsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/alert-group-settings/setting-0", handler);
-      const cli = new AlertGroupSettingsApiClient(fetcher);
+      const client = new AlertGroupSettingsApiClient(fetcher);
 
-      const setting = await cli.delete("setting-0");
+      const setting = await client.delete("setting-0");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;

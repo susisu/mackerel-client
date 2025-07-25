@@ -13,9 +13,9 @@ describe("MetricsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/hosts/host-0/metric-names", handler);
-      const cli = new MetricsApiClient(fetcher);
+      const client = new MetricsApiClient(fetcher);
 
-      const metricNames = await cli.listHostMetricNames("host-0");
+      const metricNames = await client.listHostMetricNames("host-0");
 
       assertSpyCalls(handler, 1);
 
@@ -33,9 +33,9 @@ describe("MetricsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/hosts/host-0/metrics", handler);
-      const cli = new MetricsApiClient(fetcher);
+      const client = new MetricsApiClient(fetcher);
 
-      const dataPoints = await cli.getHostMetricDataPoints("host-0", "loadavg5", {
+      const dataPoints = await client.getHostMetricDataPoints("host-0", "loadavg5", {
         from: new Date("2024-06-06T12:00:00Z"),
         to: new Date("2024-06-06T13:00:00Z"),
       });
@@ -68,9 +68,9 @@ describe("MetricsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/services/foo/metrics", handler);
-      const cli = new MetricsApiClient(fetcher);
+      const client = new MetricsApiClient(fetcher);
 
-      const dataPoints = await cli.getServiceMetricDataPoints("foo", "abc", {
+      const dataPoints = await client.getServiceMetricDataPoints("foo", "abc", {
         from: new Date("2024-06-06T12:00:00Z"),
         to: new Date("2024-06-06T13:00:00Z"),
       });
@@ -109,9 +109,9 @@ describe("MetricsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/tsdb/latest", handler);
-      const cli = new MetricsApiClient(fetcher);
+      const client = new MetricsApiClient(fetcher);
 
-      const dataPoints = await cli.getLatestHostMetricDataPoints(["host-0", "host-1"], [
+      const dataPoints = await client.getLatestHostMetricDataPoints(["host-0", "host-1"], [
         "loadavg5",
         "cpu.user.percentage",
       ]);
@@ -155,9 +155,9 @@ describe("MetricsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/tsdb", handler);
-      const cli = new MetricsApiClient(fetcher);
+      const client = new MetricsApiClient(fetcher);
 
-      await cli.postHostMetrics(
+      await client.postHostMetrics(
         "host-0",
         new Map([
           ["loadavg5", [
@@ -187,9 +187,9 @@ describe("MetricsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/tsdb", handler);
-      const cli = new MetricsApiClient(fetcher);
+      const client = new MetricsApiClient(fetcher);
 
-      await cli.bulkPostHostMetrics(
+      await client.bulkPostHostMetrics(
         new Map([
           [
             "host-0",
@@ -224,9 +224,9 @@ describe("MetricsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/services/foo/tsdb", handler);
-      const cli = new MetricsApiClient(fetcher);
+      const client = new MetricsApiClient(fetcher);
 
-      await cli.postServiceMetrics(
+      await client.postServiceMetrics(
         "foo",
         new Map([
           ["abc", [

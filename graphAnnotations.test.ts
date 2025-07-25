@@ -31,9 +31,9 @@ describe("GraphAnnotationsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/graph-annotations", handler);
-      const cli = new GraphAnnotationsApiClient(fetcher);
+      const client = new GraphAnnotationsApiClient(fetcher);
 
-      const annotations = await cli.list("foo", {
+      const annotations = await client.list("foo", {
         from: new Date("2024-06-06T12:00:00Z"),
         to: new Date("2024-06-07T12:00:00Z"),
       });
@@ -85,9 +85,9 @@ describe("GraphAnnotationsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/graph-annotations", handler);
-      const cli = new GraphAnnotationsApiClient(fetcher);
+      const client = new GraphAnnotationsApiClient(fetcher);
 
-      const annotation = await cli.create({
+      const annotation = await client.create({
         title: "my annotation",
         description: "test",
         from: new Date("2024-06-06T12:34:56Z"),
@@ -135,9 +135,9 @@ describe("GraphAnnotationsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("PUT", "/api/v0/graph-annotations/annotation-0", handler);
-      const cli = new GraphAnnotationsApiClient(fetcher);
+      const client = new GraphAnnotationsApiClient(fetcher);
 
-      const annotation = await cli.update("annotation-0", {
+      const annotation = await client.update("annotation-0", {
         title: "my annotation",
         description: "test",
         from: new Date("2024-06-06T12:34:56Z"),
@@ -185,9 +185,9 @@ describe("GraphAnnotationsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/graph-annotations/annotation-0", handler);
-      const cli = new GraphAnnotationsApiClient(fetcher);
+      const client = new GraphAnnotationsApiClient(fetcher);
 
-      const annotation = await cli.delete("annotation-0");
+      const annotation = await client.delete("annotation-0");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;

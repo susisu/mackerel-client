@@ -30,9 +30,9 @@ describe("DashboardsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/dashboards", handler);
-      const cli = new DashboardsApiClient(fetcher);
+      const client = new DashboardsApiClient(fetcher);
 
-      const dashboards = await cli.list();
+      const dashboards = await client.list();
 
       assertSpyCalls(handler, 1);
 
@@ -75,9 +75,9 @@ describe("DashboardsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/dashboards/dashboard-0", handler);
-      const cli = new DashboardsApiClient(fetcher);
+      const client = new DashboardsApiClient(fetcher);
 
-      const dashboard = await cli.get("dashboard-0");
+      const dashboard = await client.get("dashboard-0");
 
       assertSpyCalls(handler, 1);
 
@@ -120,9 +120,9 @@ describe("DashboardsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/dashboards", handler);
-      const cli = new DashboardsApiClient(fetcher);
+      const client = new DashboardsApiClient(fetcher);
 
-      const dashboard = await cli.create({
+      const dashboard = await client.create({
         title: "my dashboard",
         memo: "test",
         urlPath: "my-dashboard",
@@ -191,9 +191,9 @@ describe("DashboardsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("PUT", "/api/v0/dashboards/dashboard-0", handler);
-      const cli = new DashboardsApiClient(fetcher);
+      const client = new DashboardsApiClient(fetcher);
 
-      const dashboard = await cli.update("dashboard-0", {
+      const dashboard = await client.update("dashboard-0", {
         title: "my dashboard",
         memo: "test",
         urlPath: "my-dashboard",
@@ -262,9 +262,9 @@ describe("DashboardsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/dashboards/dashboard-0", handler);
-      const cli = new DashboardsApiClient(fetcher);
+      const client = new DashboardsApiClient(fetcher);
 
-      const dashboard = await cli.delete("dashboard-0");
+      const dashboard = await client.delete("dashboard-0");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;

@@ -38,9 +38,9 @@ describe("MonitorsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/monitors", handler);
-      const cli = new MonitorsApiClient(fetcher);
+      const client = new MonitorsApiClient(fetcher);
 
-      const monitors = await cli.list();
+      const monitors = await client.list();
 
       assertSpyCalls(handler, 1);
 
@@ -99,9 +99,9 @@ describe("MonitorsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/monitors/monitor-0", handler);
-      const cli = new MonitorsApiClient(fetcher);
+      const client = new MonitorsApiClient(fetcher);
 
-      const monitor = await cli.get("monitor-0");
+      const monitor = await client.get("monitor-0");
 
       assertSpyCalls(handler, 1);
 
@@ -136,9 +136,9 @@ describe("MonitorsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/monitors", handler);
-      const cli = new MonitorsApiClient(fetcher);
+      const client = new MonitorsApiClient(fetcher);
 
-      const monitor = await cli.create({
+      const monitor = await client.create({
         name: "my monitor",
         memo: "test",
         notificationIntervalMinutes: 60,
@@ -195,9 +195,9 @@ describe("MonitorsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("PUT", "/api/v0/monitors/monitor-0", handler);
-      const cli = new MonitorsApiClient(fetcher);
+      const client = new MonitorsApiClient(fetcher);
 
-      const monitor = await cli.update("monitor-0", {
+      const monitor = await client.update("monitor-0", {
         name: "my monitor",
         memo: "test",
         notificationIntervalMinutes: 60,
@@ -254,9 +254,9 @@ describe("MonitorsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/monitors/monitor-0", handler);
-      const cli = new MonitorsApiClient(fetcher);
+      const client = new MonitorsApiClient(fetcher);
 
-      const monitor = await cli.delete("monitor-0");
+      const monitor = await client.delete("monitor-0");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -283,9 +283,9 @@ describe("MonitorsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/monitoring/checks/report", handler);
-      const cli = new MonitorsApiClient(fetcher);
+      const client = new MonitorsApiClient(fetcher);
 
-      await cli.postCheckMonitoringReports([
+      await client.postCheckMonitoringReports([
         {
           name: "mycheck",
           source: {

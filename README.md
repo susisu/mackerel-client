@@ -21,13 +21,13 @@ npx jsr add @susisu/mackerel-client
 ```ts
 import { MackerelClient } from "@susisu/mackerel-client";
 
-const cli = new MackerelClient("<YOUR API KEY>");
+const client = new MackerelClient("<YOUR API KEY>");
 
 // list hosts
-const hosts = await cli.hosts.list();
+const hosts = await client.hosts.list();
 
 // create a service
-await cli.services.create({
+await client.services.create({
   name: "myservice",
 });
 

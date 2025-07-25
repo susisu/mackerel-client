@@ -29,9 +29,9 @@ describe("ChannelsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/channels", handler);
-      const cli = new ChannelsApiClient(fetcher);
+      const client = new ChannelsApiClient(fetcher);
 
-      const channels = await cli.list();
+      const channels = await client.list();
 
       assertSpyCalls(handler, 1);
 
@@ -68,9 +68,9 @@ describe("ChannelsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/channels", handler);
-      const cli = new ChannelsApiClient(fetcher);
+      const client = new ChannelsApiClient(fetcher);
 
-      const channel = await cli.create({
+      const channel = await client.create({
         name: "my channel",
         type: "webhook",
         url: "https://example.com/",
@@ -113,9 +113,9 @@ describe("ChannelsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/channels/channel-0", handler);
-      const cli = new ChannelsApiClient(fetcher);
+      const client = new ChannelsApiClient(fetcher);
 
-      const channel = await cli.delete("channel-0");
+      const channel = await client.delete("channel-0");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -163,9 +163,9 @@ describe("ChannelsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/notification-groups", handler);
-      const cli = new ChannelsApiClient(fetcher);
+      const client = new ChannelsApiClient(fetcher);
 
-      const groups = await cli.listNotificationGroups();
+      const groups = await client.listNotificationGroups();
 
       assertSpyCalls(handler, 1);
 
@@ -221,9 +221,9 @@ describe("ChannelsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/notification-groups", handler);
-      const cli = new ChannelsApiClient(fetcher);
+      const client = new ChannelsApiClient(fetcher);
 
-      const group = await cli.createNotificationGroups({
+      const group = await client.createNotificationGroups({
         name: "my group",
         notificationLevel: "all",
         childNotificationGroupIds: ["group-1"],
@@ -296,9 +296,9 @@ describe("ChannelsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("PUT", "/api/v0/notification-groups/group-0", handler);
-      const cli = new ChannelsApiClient(fetcher);
+      const client = new ChannelsApiClient(fetcher);
 
-      const group = await cli.updateNotificationGroups("group-0", {
+      const group = await client.updateNotificationGroups("group-0", {
         name: "my group",
         notificationLevel: "all",
         childNotificationGroupIds: ["group-1"],
@@ -371,9 +371,9 @@ describe("ChannelsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/notification-groups/group-0", handler);
-      const cli = new ChannelsApiClient(fetcher);
+      const client = new ChannelsApiClient(fetcher);
 
-      const group = await cli.deleteNotificationGroups("group-0");
+      const group = await client.deleteNotificationGroups("group-0");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;

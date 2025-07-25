@@ -34,9 +34,9 @@ describe("UsersApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/users", handler);
-      const cli = new UsersApiClient(fetcher);
+      const client = new UsersApiClient(fetcher);
 
-      const users = await cli.list();
+      const users = await client.list();
 
       assertSpyCalls(handler, 1);
 
@@ -79,9 +79,9 @@ describe("UsersApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/users/user-1", handler);
-      const cli = new UsersApiClient(fetcher);
+      const client = new UsersApiClient(fetcher);
 
-      const user = await cli.remove("user-1");
+      const user = await client.remove("user-1");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -118,9 +118,9 @@ describe("UsersApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/invitations", handler);
-      const cli = new UsersApiClient(fetcher);
+      const client = new UsersApiClient(fetcher);
 
-      const invitations = await cli.listInvitations();
+      const invitations = await client.listInvitations();
 
       assertSpyCalls(handler, 1);
 
@@ -148,9 +148,9 @@ describe("UsersApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/invitations", handler);
-      const cli = new UsersApiClient(fetcher);
+      const client = new UsersApiClient(fetcher);
 
-      const invitation = await cli.sendInvitation({
+      const invitation = await client.sendInvitation({
         email: "foo@example.com",
         authority: "manager",
       });
@@ -175,9 +175,9 @@ describe("UsersApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/invitations/revoke", handler);
-      const cli = new UsersApiClient(fetcher);
+      const client = new UsersApiClient(fetcher);
 
-      await cli.revokeInvitation("foo@example.com");
+      await client.revokeInvitation("foo@example.com");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;

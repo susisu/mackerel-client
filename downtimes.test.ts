@@ -37,9 +37,9 @@ describe("DowntimesApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/downtimes", handler);
-      const cli = new DowntimesApiClient(fetcher);
+      const client = new DowntimesApiClient(fetcher);
 
-      const downtimes = await cli.list();
+      const downtimes = await client.list();
 
       assertSpyCalls(handler, 1);
 
@@ -114,9 +114,9 @@ describe("DowntimesApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/downtimes", handler);
-      const cli = new DowntimesApiClient(fetcher);
+      const client = new DowntimesApiClient(fetcher);
 
-      const downtime = await cli.create({
+      const downtime = await client.create({
         name: "my downtime 1",
         memo: "test",
         start: new Date("2024-06-06T12:34:56Z"),
@@ -212,9 +212,9 @@ describe("DowntimesApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("PUT", "/api/v0/downtimes/downtime-0", handler);
-      const cli = new DowntimesApiClient(fetcher);
+      const client = new DowntimesApiClient(fetcher);
 
-      const downtime = await cli.update("downtime-0", {
+      const downtime = await client.update("downtime-0", {
         name: "my downtime 1",
         memo: "test",
         start: new Date("2024-06-06T12:34:56Z"),
@@ -310,9 +310,9 @@ describe("DowntimesApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/downtimes/downtime-0", handler);
-      const cli = new DowntimesApiClient(fetcher);
+      const client = new DowntimesApiClient(fetcher);
 
-      const downtime = await cli.delete("downtime-0");
+      const downtime = await client.delete("downtime-0");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;

@@ -43,9 +43,9 @@ describe("HostsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/hosts", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      const hosts = await cli.list({
+      const hosts = await client.list({
         serviceName: "foo",
         roleNames: ["xxx", "yyy"],
         name: "myhost",
@@ -138,9 +138,9 @@ describe("HostsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/hosts/host-0", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      const host = await cli.get("host-0");
+      const host = await client.get("host-0");
 
       assertSpyCalls(handler, 1);
 
@@ -214,9 +214,9 @@ describe("HostsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/hosts-by-custom-identifier/myhost-0", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      const host = await cli.getByCustomIdentifier("myhost-0");
+      const host = await client.getByCustomIdentifier("myhost-0");
 
       assertSpyCalls(handler, 1);
 
@@ -260,9 +260,9 @@ describe("HostsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ id: "host-0" }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/hosts", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      const res = await cli.create({
+      const res = await client.create({
         name: "myhost",
         displayName: "MyHost",
         customIdentifier: "myhost-0",
@@ -319,9 +319,9 @@ describe("HostsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ id: "host-0" }));
       const fetcher = new MockFetcher()
         .mock("PUT", "/api/v0/hosts/host-0", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      await cli.update("host-0", {
+      await client.update("host-0", {
         name: "myhost",
         displayName: "MyHost",
         customIdentifier: "myhost-0",
@@ -376,9 +376,9 @@ describe("HostsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/hosts/host-0/status", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      await cli.updateStatus("host-0", "standby");
+      await client.updateStatus("host-0", "standby");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -391,9 +391,9 @@ describe("HostsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/hosts/bulk-update-statuses", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      await cli.bulkUpdateStatuses(["host-0", "host-1"], "standby");
+      await client.bulkUpdateStatuses(["host-0", "host-1"], "standby");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -409,9 +409,9 @@ describe("HostsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("PUT", "/api/v0/hosts/host-0/role-fullnames", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      await cli.updateRoles("host-0", ["foo:xxx", "bar:yyy"]);
+      await client.updateRoles("host-0", ["foo:xxx", "bar:yyy"]);
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -424,9 +424,9 @@ describe("HostsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/hosts/host-0/retire", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      await cli.retire("host-0");
+      await client.retire("host-0");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -439,9 +439,9 @@ describe("HostsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/hosts/bulk-retire", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      await cli.bulkRetire(["host-0", "host-1"]);
+      await client.bulkRetire(["host-0", "host-1"]);
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -476,9 +476,9 @@ describe("HostsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/hosts/host-0/monitored-statuses", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      const statuses = await cli.listMonitoredStatuses("host-0");
+      const statuses = await client.listMonitoredStatuses("host-0");
 
       assertSpyCalls(handler, 1);
 
@@ -515,9 +515,9 @@ describe("HostsApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/hosts/host-0/metadata", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      const namespaces = await cli.listMetadataNamespaces("host-0");
+      const namespaces = await client.listMetadataNamespaces("host-0");
 
       assertSpyCalls(handler, 1);
 
@@ -530,9 +530,9 @@ describe("HostsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ test: 42 }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/hosts/host-0/metadata/abc", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      const metadata = await cli.getMetadata("host-0", "abc");
+      const metadata = await client.getMetadata("host-0", "abc");
 
       assertSpyCalls(handler, 1);
 
@@ -545,9 +545,9 @@ describe("HostsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("PUT", "/api/v0/hosts/host-0/metadata/abc", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      await cli.putMetadata("host-0", "abc", { test: 42 });
+      await client.putMetadata("host-0", "abc", { test: 42 });
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -560,9 +560,9 @@ describe("HostsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/hosts/host-0/metadata/abc", handler);
-      const cli = new HostsApiClient(fetcher);
+      const client = new HostsApiClient(fetcher);
 
-      await cli.deleteMetadata("host-0", "abc");
+      await client.deleteMetadata("host-0", "abc");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;

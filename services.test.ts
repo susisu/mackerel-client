@@ -24,9 +24,9 @@ describe("ServicesApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/services", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      const services = await cli.list();
+      const services = await client.list();
 
       assertSpyCalls(handler, 1);
 
@@ -54,9 +54,9 @@ describe("ServicesApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/services", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      const service = await cli.create({
+      const service = await client.create({
         name: "foo",
         memo: "test",
       });
@@ -85,9 +85,9 @@ describe("ServicesApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/services/foo", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      const service = await cli.delete("foo");
+      const service = await client.delete("foo");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -117,9 +117,9 @@ describe("ServicesApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/services/foo/roles", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      const roles = await cli.listRoles("foo");
+      const roles = await client.listRoles("foo");
 
       assertSpyCalls(handler, 1);
 
@@ -144,9 +144,9 @@ describe("ServicesApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/services/foo/roles", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      const role = await cli.createRole("foo", {
+      const role = await client.createRole("foo", {
         name: "xxx",
         memo: "test",
       });
@@ -173,9 +173,9 @@ describe("ServicesApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/services/foo/roles/xxx", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      const role = await cli.deleteRole("foo:xxx");
+      const role = await client.deleteRole("foo:xxx");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -195,9 +195,9 @@ describe("ServicesApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/services/foo/metric-names", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      const metricNames = await cli.listMetricNames("foo");
+      const metricNames = await client.listMetricNames("foo");
 
       assertSpyCalls(handler, 1);
 
@@ -215,9 +215,9 @@ describe("ServicesApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/services/foo/metadata", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      const namespaces = await cli.listMetadataNamespaces("foo");
+      const namespaces = await client.listMetadataNamespaces("foo");
 
       assertSpyCalls(handler, 1);
 
@@ -230,9 +230,9 @@ describe("ServicesApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ test: 42 }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/services/foo/metadata/abc", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      const metadata = await cli.getMetadata("foo", "abc");
+      const metadata = await client.getMetadata("foo", "abc");
 
       assertSpyCalls(handler, 1);
 
@@ -245,9 +245,9 @@ describe("ServicesApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("PUT", "/api/v0/services/foo/metadata/abc", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      await cli.putMetadata("foo", "abc", { test: 42 });
+      await client.putMetadata("foo", "abc", { test: 42 });
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -260,9 +260,9 @@ describe("ServicesApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/services/foo/metadata/abc", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      await cli.deleteMetadata("foo", "abc");
+      await client.deleteMetadata("foo", "abc");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -280,9 +280,9 @@ describe("ServicesApiClient", () => {
       }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/services/foo/roles/xxx/metadata", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      const namespaces = await cli.listRoleMetadataNamespaces("foo:xxx");
+      const namespaces = await client.listRoleMetadataNamespaces("foo:xxx");
 
       assertSpyCalls(handler, 1);
 
@@ -295,9 +295,9 @@ describe("ServicesApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ test: 42 }));
       const fetcher = new MockFetcher()
         .mock("GET", "/api/v0/services/foo/roles/xxx/metadata/abc", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      const metadata = await cli.getRoleMetadata("foo:xxx", "abc");
+      const metadata = await client.getRoleMetadata("foo:xxx", "abc");
 
       assertSpyCalls(handler, 1);
 
@@ -310,9 +310,9 @@ describe("ServicesApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("PUT", "/api/v0/services/foo/roles/xxx/metadata/abc", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      await cli.putRoleMetadata("foo:xxx", "abc", { test: 42 });
+      await client.putRoleMetadata("foo:xxx", "abc", { test: 42 });
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
@@ -325,9 +325,9 @@ describe("ServicesApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/services/foo/roles/xxx/metadata/abc", handler);
-      const cli = new ServicesApiClient(fetcher);
+      const client = new ServicesApiClient(fetcher);
 
-      await cli.deleteRoleMetadata("foo:xxx", "abc");
+      await client.deleteRoleMetadata("foo:xxx", "abc");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;

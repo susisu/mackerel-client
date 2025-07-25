@@ -11,9 +11,9 @@ describe("GraphDefsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("POST", "/api/v0/graph-defs/create", handler);
-      const cli = new GraphDefsApiClient(fetcher);
+      const client = new GraphDefsApiClient(fetcher);
 
-      await cli.createHostGraphDefs([
+      await client.createHostGraphDefs([
         {
           name: "custom.foo",
           displayName: "foo",
@@ -69,9 +69,9 @@ describe("GraphDefsApiClient", () => {
       const handler = spy((_?: FetchOptions) => ({ success: true }));
       const fetcher = new MockFetcher()
         .mock("DELETE", "/api/v0/graph-defs", handler);
-      const cli = new GraphDefsApiClient(fetcher);
+      const client = new GraphDefsApiClient(fetcher);
 
-      await cli.deleteHostGraphDef("custom.foo");
+      await client.deleteHostGraphDef("custom.foo");
 
       assertSpyCalls(handler, 1);
       const body = handler.calls[0].args[0]?.body;
