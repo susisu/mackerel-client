@@ -20,7 +20,7 @@ export type DashboardWidget =
   | DashboardMarkdownWidget
   | DashboardAlertStatusWidget;
 
-type BaseDashboardWidget = {
+export type BaseDashboardWidget = {
   title: string;
   layout: DashboardWidgetLayout;
 };
@@ -191,7 +191,7 @@ export type CreateDashboardInputWidget =
   | CreateDashboardInputMarkdownWidget
   | CreateDashboardInputAlertStatusWidget;
 
-type BaseCreateDashboardInputWidget = Readonly<{
+export type BaseCreateDashboardInputWidget = Readonly<{
   title?: string | undefined;
   layout?: CreateDashboardInputWidgetLayout | undefined;
 }>;

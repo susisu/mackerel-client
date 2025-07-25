@@ -10,7 +10,7 @@ export type Alert =
   | QueryAlert
   | CheckAlert;
 
-type BaseAlert = {
+export type BaseAlert = {
   id: string;
   status: AlertStatus;
   openedAt: Date;

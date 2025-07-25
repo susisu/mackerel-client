@@ -14,7 +14,7 @@ export type Monitor =
   | AnomalyDetectionMonitor
   | QueryMonitor;
 
-type BaseMonitor = {
+export type BaseMonitor = {
   id: string;
   name: string;
   memo: string;
@@ -144,7 +144,7 @@ export type CreateMonitorInput =
   | CreateAnomalyDetectionMonitorInput
   | CreateQueryMonitorInput;
 
-type BaseCreateMonitorInput = Readonly<{
+export type BaseCreateMonitorInput = Readonly<{
   name: string;
   memo?: string | undefined;
   notificationIntervalMinutes?: number | undefined;

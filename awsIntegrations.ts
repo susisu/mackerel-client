@@ -40,14 +40,15 @@ const awsServiceTypes = [
 ] as const;
 
 // deno-lint-ignore ban-types
-type AwsServiceType = typeof awsServiceTypes[number] | (string & {});
+export type AwsServiceType = typeof awsServiceTypes[number] | (string & {});
 
 const autoRetirementSupportedAwsServiceTypes = [
   "EC2",
   "RDS",
 ] as const;
 
-type AwsAutoRetirementSupportedServiceType = typeof autoRetirementSupportedAwsServiceTypes[number];
+export type AwsAutoRetirementSupportedServiceType =
+  typeof autoRetirementSupportedAwsServiceTypes[number];
 
 function isAutoRetirementSupportedType(
   type: string,
@@ -87,7 +88,7 @@ export type AwsIntegrationService =
   | CommonAwsIntegrationService
   | AutoRetirementSupportedAwsIntegrationService;
 
-type BaseAwsIntegrationService = {
+export type BaseAwsIntegrationService = {
   roleFullname: string | undefined;
   metrics: AwsIntegrationServiceMetrics;
 };
@@ -149,7 +150,7 @@ export type CreateAwsIntegrationInputService =
   | CreateAwsIntegrationInputCommonService
   | CreateAwsIntegrationInputAutoRetirementSupportedService;
 
-type BaseCreateAwsIntegrationInputService = Readonly<{
+export type BaseCreateAwsIntegrationInputService = Readonly<{
   roleFullname?: string | undefined;
   metrics?: CreateAwsIntegrationInputServiceMetrics | undefined;
 }>;

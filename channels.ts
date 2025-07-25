@@ -12,7 +12,7 @@ assertType<Extends<NotificationGroup, CreateNotificationGroupInput>>(true);
 
 export type Channel = CommonChannel | EmailChannel | SlackChannel | WebhookChannel;
 
-type BaseChannel = {
+export type BaseChannel = {
   id: string;
   name: string;
   suspendedAt: Date | undefined;
@@ -69,7 +69,7 @@ export type CreateChannelInput =
   | CreateSlackChannelInput
   | CreateWebhookChannelInput;
 
-type BaseCreateChannelInput = Readonly<{
+export type BaseCreateChannelInput = Readonly<{
   name: string;
 }>;
 

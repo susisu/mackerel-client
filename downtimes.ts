@@ -18,7 +18,7 @@ export type DowntimeRecurrence =
   | CommonDowntimeReccurence
   | WeeklyDowntimeReccurence;
 
-type BaseDowntimeRecurrence = {
+export type BaseDowntimeRecurrence = {
   interval: number;
   until: Date | undefined;
 };
@@ -81,7 +81,7 @@ export type CreateDowntimeInputRecurrence =
   | CommonCreateDowntimeInputRecurrence
   | WeeklyCreateDowntimeInputRecurrence;
 
-type BaseCreateDowntimeInputRecurrence = Readonly<{
+export type BaseCreateDowntimeInputRecurrence = Readonly<{
   interval: number;
   until?: Date | undefined;
 }>;
